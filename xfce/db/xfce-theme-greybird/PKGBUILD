@@ -1,0 +1,44 @@
+# Maintainer: Chigozirim Chukwu <noblechuk5[at]web[dot]de>
+
+pkgname='xfce-theme-greybird'
+pkgver=1.0
+pkgrel=1
+pkgdesc=''
+arch=(any)
+url='https:/github.com/shimmerproject/Greybird'
+license=(GPLv2)
+groups=(xfce-test)
+depends=(gtk-engine-murrine)
+makedepends=(git meson sassc)
+optdepends=()
+provides=("$pkgname")
+conflicts=("$pkgname")
+options=()
+source=("$pkgname::git+$url.git#branch=master")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$pkgname"
+  git describe --long --tags | sed -E "s:^$pkgname.::;s/^v//;s/^xfce-//;s/([^-]*-g)/r\1/;s/-/./g"
+}
+
+prepare() {
+  cd "$pkgname"
+  if [ -n "$DOWNLOAD_DATE" ]; then
+    commit_sha="$(git rev-list -1 --before="$DOWNLOAD_DATE" --abbrev-commit --abbrev=14 HEAD)"
+    if [ -n "$commit_sha" ]; then
+      git checkout --quiet "$commit_sha"
+    else
+      echo "Can't switch to specific date $DOWNLOAD_DATE - leaving as is on 'master'"
+    fi
+  fi
+}
+
+build() {
+  arch-meson source build
+  meson compile -C build
+}
+
+package() {
+  DESTDIR="$pkgdir" meson install -C build
+}

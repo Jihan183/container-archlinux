@@ -1,0 +1,46 @@
+# Maintainer: Chigozirim Chukwu <noblechuk5[at]web[dot]de>
+
+pkgname='xfce4-sensors-plugin'
+pkgver=1.0
+pkgrel=1
+pkgdesc=''
+arch=(any)
+url='https://gitlab.xfce.org/panel-plugins/xfce4-sensors-plugin'
+license=(GPLv2)
+groups=(xfce-test)
+depends=()
+makedepends=()
+optdepends=()
+provides=("$pkgname")
+conflicts=("$pkgname")
+options=()
+source=("$pkgname::git+$url.git#branch=master")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$pkgname"
+  git describe --long --tags | sed -E "s:^$pkgname.::;s/^v//;s/^xfce-//;s/([^-]*-g)/r\1/;s/-/./g"
+}
+
+prepare() {
+  cd "$pkgname"
+  if [ -n "$DOWNLOAD_DATE" ]; then
+    commit_sha="$(git rev-list -1 --before="$DOWNLOAD_DATE" --abbrev-commit --abbrev=14 HEAD)"
+    if [ -n "$commit_sha" ]; then
+      git checkout --quiet "$commit_sha"
+    else
+      echo "Can't switch to specific date $DOWNLOAD_DATE - leaving as is on 'master'"
+    fi
+  fi
+}
+
+build() {
+  cd "$pkgname"
+  ./autogen.sh "    --prefix=/usr/     --sbindir=/usr/bin     --libexecdir=/usr/lib/xfce4     --localstatedir=/var     --sysconfdir=/etc     --disable-debug     --disable-dependency-tracking     --disable-upower-glib     --disable-static     --enable-maintainer-mode --enable-systemd --enable-gtk-doc     --enable-xrandr --enable-xcursor --enable-libnotify     --enable-epoxy --enable-startup-notification --enable-xsync     --enable-render --enable-randr --enable-xpresent     --enable-compositor --enable-libxklavier --enable-pluggable-dialogs     --enable-sound-settings --enable-polkit --disable-network-manager     --enable-notifications --enable-gio-unix --enable-gudev     --enable-exif --enable-pcre --enable-vala     --enable-introspection --enable-sound-settings --enable-gio-unix     --with-vala-api=0.36     --with-perl-options=INSTALLDIRS=vendor"
+  make
+}
+
+package() {
+  cd "$pkgname"
+  make DESTDIR="${pkgdir}" install
+}

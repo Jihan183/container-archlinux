@@ -1,0 +1,45 @@
+# Maintainer: Chigozirim Chukwu <noblechuk5[at]web[dot]de>
+
+pkgname='xfce4-whiskermenu-plugin'
+pkgver=1.0
+pkgrel=1
+pkgdesc=''
+arch=(any)
+url='https://gitlab.xfce.org/panel-plugins/xfce4-whiskermenu-plugin'
+license=(GPLv2)
+groups=(xfce-test)
+depends=(exo xfce4-panel)
+makedepends=(cmake git)
+optdepends=()
+provides=("$pkgname")
+conflicts=("$pkgname")
+options=()
+source=("$pkgname::git+$url.git#branch=master")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$pkgname"
+  git describe --long --tags | sed -E "s:^$pkgname.::;s/^v//;s/^xfce-//;s/([^-]*-g)/r\1/;s/-/./g"
+}
+
+prepare() {
+  cd "$pkgname"
+  if [ -n "$DOWNLOAD_DATE" ]; then
+    commit_sha="$(git rev-list -1 --before="$DOWNLOAD_DATE" --abbrev-commit --abbrev=14 HEAD)"
+    if [ -n "$commit_sha" ]; then
+      git checkout --quiet "$commit_sha"
+    else
+      echo "Can't switch to specific date $DOWNLOAD_DATE - leaving as is on 'master'"
+    fi
+  fi
+}
+
+build() {
+  cmake -B build -S "$pkgname"     -DCMAKE_BUILD_TYPE='None'     -DCMAKE_INSTALL_PREFIX=/usr     -DCMAKE_INSTALL_LIBDIR=lib
+  make -C build
+}
+
+package() {
+  cd "$pkgname"
+  make DESTDIR="${pkgdir}" install
+}

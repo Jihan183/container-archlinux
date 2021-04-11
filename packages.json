@@ -1,0 +1,83 @@
+{
+    "aur_git_packages": [
+        "exo",
+        "garcon",
+        "libxfce4ui",
+        "libxfce4util",
+        "thunar",
+        "thunar-volman",
+        "tumbler",
+        "xfce4-appfinder",
+        "xfce4-dev-tools",
+        "xfce4-panel",
+        "xfce4-power-manager",
+        "xfce4-session",
+        "xfce4-settings",
+        "xfconf",
+        "xfdesktop",
+        "xfwm4",
+        "elementary-xfce-icons",
+        "xfce-theme-greybird",
+        // bindings
+        "xfce4-vala",
+        // apps
+        "gigolo",
+        "mousepad",
+        "parole",
+        "xfburn",
+        "xfce4-notifyd",
+        "xfce4-panel-profiles",
+        "xfce4-screensaver",
+        "xfce4-screenshooter",
+        "xfce4-taskmanager",
+        "xfce4-terminal",
+        "xfce4-volumed-pulse",
+        "xfmpc",
+        // panel plugins
+        "xfce4-clipman-plugin",
+        "xfce4-cpufreq-plugin",
+        "xfce4-datetime-plugin",
+        "xfce4-diskperf-plugin",
+        "xfce4-fsguard-plugin",
+        "xfce4-genmon-plugin",
+        "xfce4-netload-plugin",
+        "xfce4-pulseaudio-plugin",
+        "xfce4-smartbookmark-plugin",
+        "xfce4-systemload-plugin",
+        "xfce4-weather-plugin",
+        "xfce4-whiskermenu-plugin",
+        "xfce4-xkb-plugin",
+        // thunar plugins
+        "thunar-archive-plugin",
+        "thunar-media-tags-plugin",
+        "thunar-shares-plugin",
+        "thunar-vcs-plugin"
+    ],
+    // These are packages which we are able find in the main repos
+    "arch_main_packages": [
+        // apps
+        "catfish",
+        "ristretto",
+        "xfce4-dict",
+        // panel plugins
+        "xfce4-battery-plugin",
+        "xfce4-calculator-plugin",
+        "xfce4-cpugraph-plugin",
+        "xfce4-mailwatch-plugin",
+        "xfce4-mpc-plugin",
+        "xfce4-notes-plugin",
+        "xfce4-sensors-plugin",
+        "xfce4-timer-plugin",
+        "xfce4-verve-plugin",
+        "xfce4-wavelan-plugin"
+    ],
+    // These are packages we can only find on AUR (better than nothing)
+    "aur_packages": [
+        // apps
+        "xfce4-mixer",
+        // panel plugins
+        "xfce4-indicator-plugin",
+        "xfce4-places-plugin",
+        "xfce4-statusnotifier-plugin"
+    ]
+}

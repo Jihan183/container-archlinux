@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "*.PKGBUILD": "shellscript",
+        "packages.json": "jsonc"
+    },
+    "shellcheck.useWorkspaceRootAsCwd": true,
+    "shellcheck.exclude": [
+        "2148",
+        "2034",
+        "2164",
+        "2154"
+    ],
+    "shellcheck.customArgs": [
+        "shell=bash"
+    ]
+}
