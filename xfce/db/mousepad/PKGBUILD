@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/apps/mousepad'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(gtksourceview3 xfconf)
-makedepends=(git intltool xfce4-dev-tools)
+depends=('gtksourceview3' 'xfconf')
+makedepends=('git' 'intltool' 'xfce4-dev-tools')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

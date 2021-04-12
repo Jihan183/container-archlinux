@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/panel-plugins/xfce4-verve-plugin'
 license=(GPLv2)
 groups=(xfce-test)
-depends=()
-makedepends=()
+depends=('xfce4-panel')
+makedepends=('intltool')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

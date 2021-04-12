@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/xfce/libxfce4ui'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(gtk3 hicolor-icon-theme libgtop libsm libxfce4util startup-notification xfconf)
-makedeps=(git glade gobject-introspection gtk-doc intltool vala xfce4-dev-tools)
+depends=('gtk3' 'hicolor-icon-theme' 'libgtop' 'libsm' 'libxfce4util' 'startup-notification' 'xfconf')
+makedepends=('git' 'glade' 'gobject-introspection' 'gtk-doc' 'intltool' 'vala' 'xfce4-dev-tools')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

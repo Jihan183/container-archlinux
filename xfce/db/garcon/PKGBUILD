@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/xfce/garcon'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(gtk3 libxfce4ui libxfce4util)
-makedeps=(git xfce4-dev-tools)
+depends=('gtk3' 'libxfce4ui' 'libxfce4util')
+makedepends=('git' 'xfce4-dev-tools')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

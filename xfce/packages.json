@@ -61,7 +61,6 @@
         "xfce4-dict",
         // panel plugins
         "xfce4-battery-plugin",
-        "xfce4-calculator-plugin",
         "xfce4-cpugraph-plugin",
         "xfce4-mailwatch-plugin",
         "xfce4-mpc-plugin",
@@ -76,6 +75,7 @@
         // apps
         "xfce4-mixer",
         // panel plugins
+        "xfce4-calculator-plugin",
         "xfce4-indicator-plugin",
         "xfce4-places-plugin",
         "xfce4-statusnotifier-plugin"

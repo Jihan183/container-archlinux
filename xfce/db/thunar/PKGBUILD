@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/xfce/thunar'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(desktop-file-utils exo gtk3 hicolor-icon-theme libexif libgudev libnotify libpng libxfce4ui libxfce4util)
-makedeps=(git gobject-introspection gtk-doc intltool xfce4-dev-tools xfce4-panel)
+depends=('desktop-file-utils' 'exo' 'gtk3' 'hicolor-icon-theme' 'libexif' 'libgudev' 'libnotify' 'libpng' 'libxfce4ui' 'libxfce4util')
+makedepends=('git' 'gobject-introspection' 'gtk-doc' 'intltool' 'xfce4-dev-tools' 'xfce4-panel')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

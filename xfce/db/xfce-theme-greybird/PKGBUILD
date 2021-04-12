@@ -8,13 +8,13 @@ arch=(any)
 url='https:/github.com/shimmerproject/Greybird'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(gtk-engine-murrine)
-makedepends=(git meson sassc)
+depends=('gtk-engine-murrine')
+makedepends=('git' 'meson' 'sassc')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

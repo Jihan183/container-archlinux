@@ -1,20 +1,20 @@
 # Maintainer: Chigozirim Chukwu <noblechuk5[at]web[dot]de>
 
 pkgname='xfce4-statusnotifier-plugin'
-pkgver=1.0
+pkgver=0.2.3.r2.gef6b066
 pkgrel=1
 pkgdesc=''
 arch=(any)
 url='https://gitlab.xfce.org/panel-plugins/xfce4-statusnotifier-plugin'
 license=(GPLv2)
 groups=(xfce-test)
-depends=()
-makedepends=()
+depends=('')
+makedepends=('')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

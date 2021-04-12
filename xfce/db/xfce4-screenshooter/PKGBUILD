@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/apps/xfce4-screenshooter'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(libsoup xfce4-panel)
-makedepends=(intltool xfce4-dev-tools)
+depends=('libsoup' 'xfce4-panel')
+makedepends=('intltool' 'xfce4-dev-tools')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

@@ -8,13 +8,13 @@ arch=(any)
 url='https:/github.com/shimmerproject/elementary-xfce'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(adwaita-icon-theme)
-makedepends=(git gtk3 optipng)
+depends=('adwaita-icon-theme')
+makedepends=('git' 'gtk3' 'optipng')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

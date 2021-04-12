@@ -2,6 +2,7 @@
 
 # https://wiki.archlinux.org/index.php/Aurweb_RPC_interface#API_usage
 AUR_RPC='https://aur.archlinux.org/rpc/?v=5'
+SCRIPTS_DIR=$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")
 
 function fetch_deps() {
     case "${1,,}" in
@@ -36,25 +37,29 @@ function fetch_makedeps() {
 
 # remove dups, and remove built packages from dep list
 function clean_deps() {
-    sort --unique | ./dups.sed.sh | ./normalize.awk "${ALL_XFCE_PACKAGES[@]}"
+    sort --unique | "$SCRIPTS_DIR/dups.sed.sh" | "$SCRIPTS_DIR/normalize.awk" "${ALL_XFCE_PACKAGES[@]}"
 }
 
 # called to update the dependencies of each package
 function update_packages() {
-    for p in "${@}"; do
-        mapfile -t DEPS < <(fetch_deps aur "$p" | clean_deps)
-        mapfile -t MAKE_DEPS < <(fetch_makedeps aur "$p" | clean_deps)
-        echo "$p"
+    api="$1"
+    for p in "${@:2}"; do
+        printf 'Updating %s...' "${p}"
+        mapfile -t DEPS < <(fetch_deps "$api" "$p" | clean_deps)
+        mapfile -t MAKE_DEPS < <(fetch_makedeps "$api" "$p" | clean_deps)
+
         if ((${#DEPS[@]})); then
-            sed -i -E "s/(^depends)=\(.*\)/\1=(${DEPS[*]})/" "../xfce/db/$p/PKGBUILD"
+            sed -i -E "s/(^depends)=\(.*\)/\1=(${DEPS[*]@Q})/" "xfce/db/$p/PKGBUILD"
         fi
         if ((${#MAKE_DEPS[@]})); then
-            sed -i -E "s/(^makedepends)=\(.*\)/\1=(${MAKE_DEPS[*]})/" "../xfce/db/$p/PKGBUILD"
+            sed -i -E "s/(^makedepends)=\(.*\)/\1=(${MAKE_DEPS[*]@Q})/" "xfce/db/$p/PKGBUILD"
         fi
+
+        echo 'done'
     done
 }
 
-packages="packages.json"
+packages="xfce/packages.json"
 
 mapfile -t AUR_GIT_PACKAGES < <(awk '!/^\s*\/\//' "$packages" | jq -cr '.aur_git_packages[]')
 
@@ -75,8 +80,5 @@ if ((!${#ALL_XFCE_PACKAGES[@]})); then
     exit 1
 fi
 
-# make sure we are in the scripts folder
-cd "$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")"
-
-update_packages "${AUR_GIT_PACKAGES[@]}" "${AUR_PACKAGES[@]}"
-update_packages "${ARCH_MAIN_PACKAGES[@]}"
+update_packages aur "${AUR_GIT_PACKAGES[@]}" "${AUR_PACKAGES[@]}"
+update_packages arch "${ARCH_MAIN_PACKAGES[@]}"

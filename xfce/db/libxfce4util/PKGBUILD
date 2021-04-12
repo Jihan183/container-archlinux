@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/xfce/libxfce4util'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(glib2)
-makedeps=(git gobject-introspection vala xfce4-dev-tools)
+depends=('glib2')
+makedepends=('git' 'gobject-introspection' 'vala' 'xfce4-dev-tools')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

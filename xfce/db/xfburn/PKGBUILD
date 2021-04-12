@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/apps/xfburn'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(desktop-file-utils exo gst-plugins-base-libs gtk3 libburn libgudev libisofs libxfce4ui)
-makedepends=(git intltool)
+depends=('desktop-file-utils' 'exo' 'gst-plugins-base-libs' 'gtk3' 'libburn' 'libgudev' 'libisofs' 'libxfce4ui')
+makedepends=('git' 'intltool')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

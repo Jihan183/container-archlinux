@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/apps/parole'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(dbus-glib gst-plugins-base gst-plugins-good libnotify libxfce4ui)
-makedepends=(git intltool python xfce4-dev-tools)
+depends=('dbus-glib' 'gst-plugins-base' 'gst-plugins-good' 'libnotify' 'libxfce4ui')
+makedepends=('git' 'intltool' 'python' 'xfce4-dev-tools')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

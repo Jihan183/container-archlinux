@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/xfce/xfce4-panel'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(desktop-file-utils exo garcon hicolor-icon-theme libdbusmenu-gtk3 libwnck3 libxfce4ui libxfce4util xfconf)
-makedeps=(git gobject-introspection gtk-doc intltool vala xfce4-dev-tools)
+depends=('desktop-file-utils' 'exo' 'garcon' 'hicolor-icon-theme' 'libdbusmenu-gtk3' 'libwnck3' 'libxfce4ui' 'libxfce4util' 'xfconf')
+makedepends=('git' 'gobject-introspection' 'gtk-doc' 'intltool' 'vala' 'xfce4-dev-tools')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {

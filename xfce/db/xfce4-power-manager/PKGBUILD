@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/xfce/xfce4-power-manager'
 license=(GPLv2)
 groups=(xfce-test)
-depends=(hicolor-icon-theme libnotify libxfce4ui upower)
-makedeps=(git intltool xfce4-dev-tools xfce4-panel)
+depends=('hicolor-icon-theme' 'libnotify' 'libxfce4ui' 'upower')
+makedepends=('git' 'intltool' 'xfce4-dev-tools' 'xfce4-panel')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git#branch=master")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
 md5sums=('SKIP')
 
 pkgver() {
