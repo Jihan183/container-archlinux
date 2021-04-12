@@ -37,7 +37,7 @@ function fetch_makedeps() {
 
 # remove dups, and remove built packages from dep list
 function clean_deps() {
-    sort --unique | "$SCRIPTS_DIR/dups.sed.sh" | "$SCRIPTS_DIR/normalize.awk" "${ALL_XFCE_PACKAGES[@]}"
+    sort --unique - | "$SCRIPTS_DIR/dups.sed.sh" | "$SCRIPTS_DIR/normalize.awk" "${ALL_XFCE_PACKAGES[@]}"
 }
 
 # called to update the dependencies of each package
