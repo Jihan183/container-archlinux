@@ -7,5 +7,5 @@ cd /tmp/"${PACMAN_HELPER}"
 runuser -- makepkg --install --force --syncdeps --rmdeps --noconfirm --needed
 
 runuser -- "${PACMAN}" -S aurto --noconfirm --needed
-runuser -- "${PACMAN}" -S intltool glib2 --noconfirm --needed
+runuser -- "${PACMAN}" -S intltool glib2 nano --noconfirm --needed
 # gconf gsettings-desktop-schemas

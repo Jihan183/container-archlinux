@@ -19,6 +19,7 @@ WORKDIR /container
 
 # Setup the test user
 ARG USERNAME='xfcetest'
+ENV USER="${USERNAME}"
 ENV USERHOME="/home/${USERNAME}"
 RUN /container/scripts/create-user.sh
 
@@ -102,6 +103,6 @@ USER "${USERNAME}"
 
 WORKDIR "${USERHOME}"
 
-RUN exit 1
+RUN exit 0
 
-CMD [ "/container_scripts/entrypoint.sh" ]
+# CMD [ "/container_scripts/entrypoint.sh" ]
