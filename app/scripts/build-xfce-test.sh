@@ -1,11 +1,12 @@
 #!/bin/bash
 
-export DEFAULT_USER="${DEFAULT_USER:-xfce-test_user}"
-export DOWNLOAD_DATE="${DOWNLOAD_DATE:-$(date +%Y-%m-%d)}"
+export DOWNLOAD_DATE="${DOWNLOAD_DATE:-$(date '+%Y-%m-%d %T')}"
 
 docker build \
-    --build-arg DEFAULT_USER \
+    --no-cache \
+    --build-arg USERNAME \
     --build-arg DOWNLOAD_DATE \
+    --build-arg DEBUG \
     --volume "$PWD/xfce/db:/container/xfce:ro" \
     --volume "$PWD/container:/container:ro" \
     --tag xfce-test/xfce-test:archlinux --file Dockerfile .

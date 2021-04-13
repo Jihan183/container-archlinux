@@ -1,3 +1,4 @@
 function runuser() {
-    sudo /usr/bin/runuser -u "${DEFAULT_USER}" "${@}"
+    # sudo /usr/bin/runuser -p -u "${USERNAME}" "${@}"
+    sudo --user "${USERNAME}" "${@:2}"
 }

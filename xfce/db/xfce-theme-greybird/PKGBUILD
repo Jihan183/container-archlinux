@@ -7,7 +7,7 @@ pkgdesc=''
 arch=(any)
 url='https:/github.com/shimmerproject/Greybird'
 license=(GPLv2)
-groups=(xfce-test)
+groups=(xfce-build)
 depends=('gtk-engine-murrine')
 makedepends=('git' 'meson' 'sassc')
 optdepends=()
@@ -19,7 +19,7 @@ md5sums=('SKIP')
 
 pkgver() {
   cd "$pkgname"
-  git describe --long --tags | sed -E "s:^$pkgname.::;s/^v//;s/^xfce-//;s/([^-]*-g)/r\1/;s/-/./g"
+  git describe | sed -E "s:^$pkgname.::;s/^v//;s/^xfce-//;s/([^-]*-g)/r\1/;s/-/./g"
 }
 
 prepare() {

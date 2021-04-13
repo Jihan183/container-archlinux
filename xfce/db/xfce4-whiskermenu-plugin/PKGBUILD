@@ -7,7 +7,7 @@ pkgdesc=''
 arch=(any)
 url='https://gitlab.xfce.org/panel-plugins/xfce4-whiskermenu-plugin'
 license=(GPLv2)
-groups=(xfce-test)
+groups=(xfce-build)
 depends=('exo' 'xfce4-panel')
 makedepends=('cmake' 'git')
 optdepends=()
@@ -19,7 +19,7 @@ md5sums=('SKIP')
 
 pkgver() {
   cd "$pkgname"
-  git describe --long --tags | sed -E "s:^$pkgname.::;s/^v//;s/^xfce-//;s/([^-]*-g)/r\1/;s/-/./g"
+  git describe | sed -E "s:^$pkgname.::;s/^v//;s/^xfce-//;s/([^-]*-g)/r\1/;s/-/./g"
 }
 
 prepare() {
@@ -35,7 +35,10 @@ prepare() {
 }
 
 build() {
-  cmake -B build -S "$pkgname"     -DCMAKE_BUILD_TYPE='None'     -DCMAKE_INSTALL_PREFIX=/usr     -DCMAKE_INSTALL_LIBDIR=lib
+  cmake -B build -S "$pkgname" \
+    -DCMAKE_BUILD_TYPE='None' \
+    -DCMAKE_INSTALL_PREFIX=/usr\
+    -DCMAKE_INSTALL_LIBDIR=lib
   make -C build
 }
 
