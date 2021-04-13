@@ -32,10 +32,10 @@ RUN install -dm755 --owner="${USERNAME}" ${BUILDDIR}
 RUN /container/scripts/create-local-aur.sh
 
 # build pacman helper
-ARG PACMAN_HELPER='pikaur'
+ARG PACMAN_HELPER='yay'
 ARG PACMAN_HELPER_URL="https://aur.archlinux.org/${PACMAN_HELPER}.git"
 ENV PACMAN="${PACMAN_HELPER}"
-RUN /container/scripts/pkg-utils.sh
+RUN env PACMAN_HELPER_URL="$(sed -E 's|/yay(\.git)$|/yay-bin\1|' <<< ${PACMAN_HELPER_URL})" /container/scripts/pkg-utils.sh
 
 # install more packages required for the next few steps
 # RUN runuser -u ${USERNAME} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed
@@ -56,8 +56,8 @@ ENV MAIN_BRANCH="${MAIN_BRANCH}"
 ARG CFLAGS='-O2 -pipe'
 ENV CFLAGS="${CFLAGS}"
 
-WORKDIR /git/xfce-test
-RUN /container/scripts/install-xfce-packages.sh
+# WORKDIR /git/xfce-test
+# RUN /container/scripts/install-xfce-packages.sh
 
 # Install _all_ languages for testing
 # RUN ${PACMAN} -Syu --noconfirm \

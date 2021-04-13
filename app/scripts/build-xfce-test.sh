@@ -3,7 +3,6 @@
 export DOWNLOAD_DATE="${DOWNLOAD_DATE:-$(date '+%Y-%m-%d %T')}"
 
 docker build \
-    --no-cache \
     --build-arg USERNAME \
     --build-arg DOWNLOAD_DATE \
     --build-arg DEBUG \
