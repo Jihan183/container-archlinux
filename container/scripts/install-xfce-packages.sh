@@ -5,8 +5,7 @@ source /container/scripts/common.sh
 runuser -- aur build \
     --ignorearch \
     --arg-file /container/pkglist.txt \
-    --pkgver --prevent-downgrade \
-    --database=custom \
+    --pkgver --database=custom \
     --margs --syncdeps --noconfirm
 
 mapfile -t all_pkgs < /container/pkglist.txt

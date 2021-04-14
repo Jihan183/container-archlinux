@@ -39,15 +39,18 @@ RUN env PACMAN_HELPER_URL="$(sed -E 's|/yay(\.git)$|/yay-bin\1|' <<< ${PACMAN_HE
 
 # install more packages required for the next few steps
 # RUN runuser -u ${USERNAME} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed
-
+ENV XFCE_WORK_DIR='/git/xfce-test'
 # needed for LDTP and friends
 # RUN /usr/bin/dbus-run-session /usr/bin/gsettings set org.gnome.desktop.interface toolkit-accessibility true
-RUN install -dm755 --group=${USERNAME} /git/xfce-test \
-    && cp -R /container/xfce/* /git/xfce-test \
-    && chgrp -R ${USERNAME} /git/xfce-test \
-    && chmod -R g+ws /git/xfce-test
+RUN install -dm755 --group=${USERNAME} "${XFCE_WORK_DIR}" \
+    && find /container/xfce/ -maxdepth 2 -type f -name 'PKGBUILD' \
+        -execdir sh -c 'install -Dm644 \
+            <(sed "s|\$url\.git|file://${PWD}|" {}) \
+            /git/xfce-test/${PWD##*/}/PKGBUILD' \; \
+    && chgrp -R ${USERNAME} "${XFCE_WORK_DIR}" \
+    && chmod -R g+ws "${XFCE_WORK_DIR}"
 
-# Line used to invalidate all git clones
+# line used to invalidate all git clones
 ARG DOWNLOAD_DATE
 ENV DOWNLOAD_DATE="${DOWNLOAD_DATE}"
 ARG MAIN_BRANCH='master'
@@ -56,8 +59,8 @@ ENV MAIN_BRANCH="${MAIN_BRANCH}"
 ARG CFLAGS='-O2 -pipe'
 ENV CFLAGS="${CFLAGS}"
 
-# WORKDIR /git/xfce-test
-# RUN /container/scripts/install-xfce-packages.sh
+WORKDIR "${XFCE_WORK_DIR}"
+RUN /container/scripts/install-xfce-packages.sh
 
 # Install _all_ languages for testing
 # RUN ${PACMAN} -Syu --noconfirm \

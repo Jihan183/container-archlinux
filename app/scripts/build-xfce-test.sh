@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export DOWNLOAD_DATE="${DOWNLOAD_DATE:-$(date '+%Y-%m-%d %T')}"
+export USERNAME="${USERNAME:-$USER}"
 
 docker build \
     --build-arg USERNAME \
