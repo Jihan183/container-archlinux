@@ -8,9 +8,6 @@ runuser -- aur build \
     --pkgver --database=custom \
     --margs --syncdeps --noconfirm
 
-mapfile -t all_pkgs < /container/pkglist.txt
-pacman -S "${all_pkgs[@]}" --needed --noconfirm
-
 # while IFS= read -r pkg; do
 #     # build the package
 #     pushd "$pkg"

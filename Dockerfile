@@ -60,7 +60,12 @@ ARG CFLAGS='-O2 -pipe'
 ENV CFLAGS="${CFLAGS}"
 
 WORKDIR "${XFCE_WORK_DIR}"
-RUN /container/scripts/install-xfce-packages.sh
+RUN /container/scripts/build-packages.sh
+
+# copy in the scripts
+COPY --chown="${USERNAME}" container/scripts /container/scripts
+COPY --chown="${USERNAME}" container/pkglist.txt /container/pkglist.txt
+RUN ln -s /container/scripts/build-packages.sh /usr/local/bin/build-packages
 
 # Install _all_ languages for testing
 # RUN ${PACMAN} -Syu --noconfirm \
