@@ -9,11 +9,11 @@ ENV DISPLAY="${DISPLAY:-:2}"
 ARG TRAVIS
 ENV TRAVIS="${TRAVIS:-false}"
 
-ARG USERSHELL
-ENV USERSHELL="${USERSHELL:-zsh}"
+ARG USER_SHELL
+ENV USER_SHELL="${USER_SHELL:-zsh}"
 
 # base packages
-RUN pacman -Syu base-devel git ${USERSHELL} --noconfirm --needed
+RUN pacman -Syu base-devel git ${USER_SHELL} --noconfirm --needed
 
 ARG CONTAINER_BASE
 ENV CONTAINER_BASE="${CONTAINER_BASE:-/container/xfce}"
@@ -25,7 +25,7 @@ ARG USER_NAME
 ENV USER_NAME="${USER_NAME:-xfcetest}"
 ENV USER="${USER_NAME}"
 ENV USER_ID=100
-ENV USERHOME="/home/${USER_NAME}"
+ENV USER_HOME="/home/${USER_NAME}"
 
 COPY --chown="${USER_ID}" container/scripts "${CONTAINER_BASE}/scripts"
 COPY --chown="${USER_ID}" container/etc "${CONTAINER_BASE}/etc"
@@ -61,7 +61,7 @@ RUN chmod -R g+ws "${XFCE_WORK_DIR}"
 
 # line used to invalidate all git clones
 ARG DOWNLOAD_DATE
-ENV DOWNLOAD_DATE="${DOWNLOAD_DATE:-2021-04-15 00:00:00}"
+ENV DOWNLOAD_DATE="${DOWNLOAD_DATE:-<unset>}"
 ARG MAIN_BRANCH
 ENV MAIN_BRANCH="${MAIN_BRANCH:-master}"
 # useful for affecting compilation
@@ -102,20 +102,20 @@ RUN scripts/install-packages.sh
 
 # RUN chmod a+x /usr/bin/xfce-test && ln -s /usr/bin/xfce-test /xfce-test
 
-# COPY --chown=${USER_NAME} .tmuxinator "${USERHOME}/.tmuxinator"
+# COPY --chown=${USER_NAME} .tmuxinator "${USER_HOME}/.tmuxinator"
 
-# COPY --chown=${USER_NAME} extra_files/mimeapps.list "${USERHOME}/.config/"
+# COPY --chown=${USER_NAME} extra_files/mimeapps.list "${USER_HOME}/.config/"
 
-# RUN install -dm755 --owner=${USER_NAME} "${USERHOME}/Desktop"
+# RUN install -dm755 --owner=${USER_NAME} "${USER_HOME}/Desktop"
 
-# RUN ln --symbolic /data "${USERHOME}/Desktop/data"
+# RUN ln --symbolic /data "${USER_HOME}/Desktop/data"
 
-# RUN ln --symbolic "${USERHOME}/version_info.txt" "${USERHOME}"/Desktop
-RUN sudo runuser -u "${USER_NAME}" -- ln -s "${CONTAINER_BASE}" "${USERHOME}/container"
+# RUN ln --symbolic "${USER_HOME}/version_info.txt" "${USER_HOME}"/Desktop
+RUN sudo runuser -u "${USER_NAME}" -- ln -s "${CONTAINER_BASE}" "${USER_HOME}/container"
 
 # switch to the test-user
 USER "${USER_NAME}"
 
-WORKDIR "${USERHOME}"
+WORKDIR "${USER_HOME}"
 
 ENTRYPOINT "${CONTAINER_BASE}/scripts/entrypoint.sh"
