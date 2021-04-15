@@ -5,7 +5,7 @@ LABEL version="0.1"
 LABEL description="ArchLinux environment for hacking on xfce-test"
 
 ARG DISPLAY
-ENV DISPLAY="${DISPLAY:-:1}"
+ENV DISPLAY="${DISPLAY:-:2}"
 ARG TRAVIS
 ENV TRAVIS="${TRAVIS:-false}"
 
@@ -70,8 +70,8 @@ ARG CPPFLAGS
 ENV CFLAGS=" ${CFLAGS:--O2 -pipe}"
 
 # build and install all packages
-# RUN scripts/build-packages.sh
-# RUN scripts/install-packages.sh
+RUN scripts/build-packages.sh
+RUN scripts/install-packages.sh
 
 # Install _all_ languages for testing
 # RUN ${PACMAN} -Syu --noconfirm \

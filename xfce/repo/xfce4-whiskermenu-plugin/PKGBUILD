@@ -14,7 +14,7 @@ optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=${MAIN_BRANCH/#master/main}}")
 md5sums=('SKIP')
 
 pkgver() {
@@ -35,7 +35,8 @@ prepare() {
 }
 
 build() {
-  cmake -B build -S "$pkgname" \
+  cd "$pkgname"
+  cmake -B build \
     -DCMAKE_BUILD_TYPE='None' \
     -DCMAKE_INSTALL_PREFIX=/usr\
     -DCMAKE_INSTALL_LIBDIR=lib
@@ -44,5 +45,5 @@ build() {
 
 package() {
   cd "$pkgname"
-  make DESTDIR="${pkgdir}" install
+  make -C build DESTDIR="${pkgdir}" install
 }

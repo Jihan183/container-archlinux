@@ -8,13 +8,13 @@ arch=(any)
 url='https://gitlab.xfce.org/panel-plugins/xfce4-indicator-plugin'
 license=(GPLv2)
 groups=(xfce-build)
-depends=('hicolor-icon-theme' 'ido' 'libindicator-gtk2' 'libindicator-gtk3' 'xdg-utils' 'xfce4-panel')
+depends=('hicolor-icon-theme' 'libindicator-gtk3' 'xdg-utils' 'xfce4-panel')
 makedepends=('intltool' 'xfce4-dev-tools')
 optdepends=()
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
-source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=$MAIN_BRANCH}")
+source=("$pkgname::git+$url.git${MAIN_BRANCH:+#branch=${MAIN_BRANCH}}")
 md5sums=('SKIP')
 
 pkgver() {

@@ -15,7 +15,8 @@ find "${ROOT_DIR}/xfce/repo" -maxdepth 2 -name 'PKGBUILD' -type f -execdir sh -c
     if [ ! -d "$pkg_workdir" ]; then
         git init --initial-branch="${MAIN_BRANCH}" "$pkg_workdir"
         cd "$pkg_workdir"
-        git remote add -t "${MAIN_BRANCH}" -m "${MAIN_BRANCH}" -f origin "$repo_url"
+        git remote add -m "${MAIN_BRANCH}" -f origin "$repo_url"
         git checkout "${MAIN_BRANCH}"
+        # git symbolic-ref refs/heads/master refs/heads/main
     fi
 ' _ '{}' \;

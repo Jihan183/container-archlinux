@@ -22,9 +22,11 @@ pkgver() {
 }
 
 build() {
+  cd "$pkgname"
   python setup.py build
 }
 
 package() {
+  cd "$pkgname"
   python setup.py install --root="$pkgdir" --optimize=1 --skip-build
 }
