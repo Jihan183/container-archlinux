@@ -5,7 +5,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 4 * * *' # everyday at 4am UTC
+    - cron: '0 4 * * 0' # https://crontab.guru/#0_4_*_*_0
   release:
     types:
       - published
@@ -22,8 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cat .env >> $GITHUB_ENV
-
       - name: Login to GitHub Packages Docker Registry
         uses: redhat-actions/podman-login@v1
         with:
@@ -31,8 +29,18 @@ jobs:
           password: ${{ env.REGISTRY_PASSWORD }}
           registry: ${{ env.IMAGE_REGISTRY }}
 
-      - id: date
-        run: echo "::set-output name=today::$(date '+%Y-%m-%d')"
+      - name: Read build args from environment
+        # https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
+        run: |
+          eval $(egrep -v '^#' .env | xargs) >> $GITHUB_ENV
+          echo "${{ github.event_name }}"
+
+      - if: github.event_name == 'schedule'
+        run: echo "TAG=${DOWNLOAD_DATE}" >> $GITHUB_ENV
+      - if: github.event_name == 'release'
+        run: echo "TAG=${GITHUB_REF}" >> $GITHUB_ENV
+      - if: github.event_name == 'push'
+        run: echo "TAG=${GITHUB_SHA:0:12}" >> $GITHUB_ENV
 
       - name: Build container
         id: build-image
@@ -40,16 +48,17 @@ jobs:
         with:
           image: xfce-test-archlinux
           oci: false
-          tags: latest ${{ steps.date.outputs.today }}
+          tags: latest ${{ env.TAG }}
           dockerfiles: |
             ./Dockerfile
           build-args: |
+            ACTIONS_CI=${{ env.ACTIONS_CI }}
+            TRAVIS_CI=${{ env.TRAVIS_CI }}
             USER_NAME=${{ env.USER_NAME }}
             USER_SHELL=${{ env.USER_SHELL }}
             DISPLAY=${{ env.DISPLAY }}
             MAIN_BRANCH=${{ env.MAIN_BRANCH }}
             DOWNLOAD_DATE=${{ env.DOWNLOAD_DATE }}
-            TRAVIS=${{ env.TRAVIS }}
             PACMAN_HELPER=${{ env.PACMAN_HELPER }}
             PACMAN_HELPER_URL=${{ env.PACMAN_HELPER_URL }}
             CONTAINER_BASE=${{ env.CONTAINER_BASE }}

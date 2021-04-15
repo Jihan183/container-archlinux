@@ -1,13 +1,13 @@
 FROM archlinux:latest
 LABEL maintainer="noblechuk5[at]web[dot]de"
-LABEL name="xfce-test"
-LABEL version="0.1"
+LABEL name="xfce-test-archlinux"
 LABEL description="ArchLinux environment for hacking on xfce-test"
+
+ARG TRAVIS_CI
+ARG ACTIONS_CI
 
 ARG DISPLAY
 ENV DISPLAY="${DISPLAY:-:2}"
-ARG TRAVIS
-ENV TRAVIS="${TRAVIS:-false}"
 
 ARG USER_SHELL
 ENV USER_SHELL="${USER_SHELL:-zsh}"
@@ -71,7 +71,7 @@ ARG CPPFLAGS
 ENV CFLAGS=" ${CFLAGS:--O2 -pipe}"
 
 # build and install all packages
-RUN scripts/build-packages.sh
+RUN scripts/build-packages.sh "${USER_HOME}/build-results.txt"
 RUN scripts/install-packages.sh
 
 # Install _all_ languages for testing
