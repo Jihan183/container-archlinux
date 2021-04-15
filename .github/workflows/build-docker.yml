@@ -36,14 +36,12 @@ jobs:
           $(egrep -v '^#' .env)
           EOF
           " | tee --append $GITHUB_ENV
-          echo "${{ github.event_name }}"
 
-      - if: github.event_name == 'schedule'
-        run: echo "TAG=${DOWNLOAD_DATE}" >> $GITHUB_ENV
-      - if: github.event_name == 'release'
-        run: echo "TAG=${GITHUB_REF}" >> $GITHUB_ENV
-      - if: github.event_name == 'push'
-        run: echo "TAG=${GITHUB_SHA:0:12}" >> $GITHUB_ENV
+          case "${{ github.event_name }}" in
+            schedule) echo "TAG=${DOWNLOAD_DATE}" ;;
+            release) echo "TAG=${GITHUB_REF}" ;;
+            push) echo "TAG=${GITHUB_SHA:0:12}" ;;
+          esac | tee --append $GITHUB_ENV
 
       - name: Build container
         id: build-image
