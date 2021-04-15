@@ -46,7 +46,8 @@ RUN scripts/create-local-aur.sh
 # build pacman helper
 ARG PACMAN_HELPER
 ENV PACMAN_HELPER="${PACMAN_HELPER:-yay}"
-ARG PACMAN_HELPER_URL="https://aur.archlinux.org/${PACMAN_HELPER}.git"
+ARG PACMAN_HELPER_URL
+ENV PACMAN_HELPER_URL="https://aur.archlinux.org/${PACMAN_HELPER}.git"
 ENV PACMAN="${PACMAN_HELPER}"
 RUN scripts/pkg-utils.sh
 
