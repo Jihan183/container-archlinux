@@ -7,4 +7,4 @@
     Therefore if these can be packaged for different distributions, people will be able to install this repo as a package and use the scripts found there to build the image
 - Create a graphical interface for this tool so that end-users don't have to worry about running scripts
 - Ensure all args have a default either through the `.env` file or in the Dockerfile
-- More...?
+- The command to install packages `runuser -- "${PACMAN}"` is used a lot, can we make a function in common.sh that wraps this call?

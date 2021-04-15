@@ -5,12 +5,20 @@ source "${CONTAINER_BASE}/scripts/common.sh"
 
 # if the user has mounted their workdir in the container, then
 # make sure we are pulling it from the working copy
-if [ -d /container/xfce/workdir ]; then
+if [ -d "${CONTAINER_BASE}/workdir" ]; then
     printf 'Getting things ready for local development...'
     # shellcheck disable=SC2016
     find "${XFCE_WORK_DIR}" -type f -name 'PKGBUILD' \
-        -exec echo -e '\nupdating: {}' \; \
-        -execdir sh -c 'sed -i "s|\$url\.git|file:///container/xfce/workdir/${PWD##*/}|" "$1"' _ '{}' \;
+        -exec echo -en '\nupdating: {}..' \; \
+        -execdir sh -c '
+            dest="${CONTAINER_BASE}/workdir/${PWD##*/}"
+            if [ ! -d $dest ]; then
+                echo "skipped"
+            else
+                sed -i "s|\$url\.git|file://${dest}|" "$1"
+                echo "done"
+            fi
+        ' _ '{}' \;
     echo 'done'
 fi
 
@@ -18,4 +26,4 @@ fi
 runuser -- "${PACMAN}" -Syu "xfce-test" --needed --noconfirm
 
 # start the user's login shell
-"${SHELL:-:}"
+exec "${SHELL:-/bin/sh}"

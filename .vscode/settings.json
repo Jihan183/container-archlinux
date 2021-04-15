@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "*.PKGBUILD": "shellscript",
-        "packages.json": "jsonc"
+        "packages.json": "jsonc",
+        "pacman.conf.in": "properties"
     },
     "shellcheck.useWorkspaceRootAsCwd": true,
     "shellcheck.exclude": [

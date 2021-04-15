@@ -7,4 +7,4 @@ fi
 
 docker run --interactive --tty --rm \
     ${LOCAL_XFCE:+--volume "$LOCAL_XFCE:/container/xfce/workdir:rw"} \
-    xfce-test/xfce-test:archlinux
+    xfce-test/xfce-test-archlinux:latest

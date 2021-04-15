@@ -110,8 +110,7 @@ RUN scripts/build-packages.sh "${USER_HOME}/build-results.txt"
 
 # RUN ln --symbolic /data "${USER_HOME}/Desktop/data"
 
-# RUN ln --symbolic "${USER_HOME}/version_info.txt" "${USER_HOME}"/Desktop
-RUN sudo runuser -u "${USER_NAME}" -- ln -s "${CONTAINER_BASE}" "${USER_HOME}/container"
+RUN scripts/user-configs.sh
 
 # switch to the test-user
 USER "${USER_NAME}"
