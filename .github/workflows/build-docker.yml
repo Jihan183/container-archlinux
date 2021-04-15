@@ -32,7 +32,10 @@ jobs:
       - name: Read build args from environment
         # https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
         run: |
-          eval $(egrep -v '^#' .env | xargs) >> $GITHUB_ENV
+          eval "cat <<-EOF
+          $(egrep -v '^#' .env | xargs)
+          EOF
+          " | tee $GITHUB_ENV
           echo "${{ github.event_name }}"
 
       - if: github.event_name == 'schedule'
