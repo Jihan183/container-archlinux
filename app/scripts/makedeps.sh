@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# https://wiki.archlinux.org/index.php/Aurweb_RPC_interface#API_usage
-AUR_RPC='https://aur.archlinux.org/rpc/?v=5'
-SCRIPTS_DIR=$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")
-PKG_JSON="xfce/packages.json"
+# shellcheck source=app/scripts/common-args.sh
+source "$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")/common-args.sh"
 
 # reads the contents of the packages.json file
 # and removes comments starting with `//`, as well
@@ -60,22 +58,23 @@ function clean_deps() {
 # called to update the dependencies of each package
 function update_packages() {
     # nothing to see here...
-    local api="$1" p DEPS MAKE_DEPS fail
+    local api="$1" p DEPS MAKE_DEPS
 
     for p in "${@:2}"; do
-        printf 'Updating %s...' "${p}"
+        local pp="${p%%-git}"
+        printf 'Updating %s...' "${pp}"
         mapfile -t DEPS < <(fetch_deps "$api" "$p" | clean_deps)
         mapfile -t MAKE_DEPS < <(fetch_makedeps "$api" "$p" | clean_deps)
 
         # just an indicator that either deps or makedeps was created
-        fail=0
+        local fail=0
         if ((${#DEPS[@]})); then
-            sed -i -E "s/(^depends)=\(.*\)/\1=(${DEPS[*]@Q})/" "xfce/db/${p%%-git}/PKGBUILD"
-            fail=$((fail + $?))
+            sed -i -E "s/(^depends)=\(.*\)/\1=(${DEPS[*]@Q})/" "xfce/repo/${pp}/PKGBUILD"
+            fail=$((fail + ${?##-}))
         fi
         if ((${#MAKE_DEPS[@]})); then
-            sed -i -E "s/(^makedepends)=\(.*\)/\1=(${MAKE_DEPS[*]@Q})/" "xfce/db/${p%%-git}/PKGBUILD"
-            fail=$((fail + $?))
+            sed -i -E "s/(^makedepends)=\(.*\)/\1=(${MAKE_DEPS[*]@Q})/" "xfce/repo/${pp}/PKGBUILD"
+            fail=$((fail + ${?##-}))
         fi
 
         if (( "${fail/#[^0]*/1}" )); then

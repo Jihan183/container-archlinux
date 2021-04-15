@@ -13,5 +13,6 @@
     "shellcheck.customArgs": [
         "--shell=bash",
         "--external-sources"
-    ]
+    ],
+    "shellcheck.enableQuickFix": true,
 }

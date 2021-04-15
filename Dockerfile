@@ -4,13 +4,11 @@ LABEL name="xfce-test"
 LABEL version="0.1"
 LABEL description="ArchLinux environment for hacking on xfce-test"
 
-# only works for ArchLinux
 ARG DISPLAY=":1"
 ENV DISPLAY="${DISPLAY}"
 ARG TRAVIS=false
 
 ARG USERSHELL='zsh'
-ARG DEBUG=1
 
 # base packages
 RUN pacman -Syu base-devel git ${USERSHELL} --noconfirm --needed
@@ -35,20 +33,17 @@ RUN /container/scripts/create-local-aur.sh
 ARG PACMAN_HELPER='yay'
 ARG PACMAN_HELPER_URL="https://aur.archlinux.org/${PACMAN_HELPER}.git"
 ENV PACMAN="${PACMAN_HELPER}"
-RUN env PACMAN_HELPER_URL="$(sed -E 's|/yay(\.git)$|/yay-bin\1|' <<< ${PACMAN_HELPER_URL})" /container/scripts/pkg-utils.sh
+RUN /container/scripts/pkg-utils.sh
 
 # install more packages required for the next few steps
 # RUN runuser -u ${USERNAME} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed
-ENV XFCE_WORK_DIR='/git/xfce-test'
+ARG CONTAINER_BASE='/container/xfce'
+ENV CONTAINER_BASE="${CONTAINER_BASE}"
+ENV XFCE_WORK_DIR="${CONTAINER_BASE}/git"
 # needed for LDTP and friends
 # RUN /usr/bin/dbus-run-session /usr/bin/gsettings set org.gnome.desktop.interface toolkit-accessibility true
-RUN install -dm755 --group=${USERNAME} "${XFCE_WORK_DIR}" \
-    && find /container/xfce/ -maxdepth 2 -type f -name 'PKGBUILD' \
-        -execdir sh -c 'install -Dm644 \
-            <(sed "s|\$url\.git|file://${PWD}|" {}) \
-            /git/xfce-test/${PWD##*/}/PKGBUILD' \; \
-    && chgrp -R ${USERNAME} "${XFCE_WORK_DIR}" \
-    && chmod -R g+ws "${XFCE_WORK_DIR}"
+COPY --chown="${USERNAME}" xfce/repo "${XFCE_WORK_DIR}"
+RUN chmod -R g+ws "${XFCE_WORK_DIR}"
 
 # line used to invalidate all git clones
 ARG DOWNLOAD_DATE
@@ -57,15 +52,17 @@ ARG MAIN_BRANCH='master'
 ENV MAIN_BRANCH="${MAIN_BRANCH}"
 # useful for affecting compilation
 ARG CFLAGS='-O2 -pipe'
-ENV CFLAGS="${CFLAGS}"
+ENV CFLAGS=" ${CFLAGS}"
 
 WORKDIR "${XFCE_WORK_DIR}"
-RUN /container/scripts/build-packages.sh
+# run and install all packages
+# RUN /container/scripts/build-packages.sh
+# RUN /container/scripts/install-packages.sh
 
 # copy in the scripts
-COPY --chown="${USERNAME}" container/scripts /container/scripts
-COPY --chown="${USERNAME}" container/pkglist.txt /container/pkglist.txt
-RUN ln -s /container/scripts/build-packages.sh /usr/local/bin/build-packages
+COPY --chown="${USERNAME}" container/scripts "${CONTAINER_BASE}/scripts"
+COPY --chown="${USERNAME}" container/pkglist.txt "${CONTAINER_BASE}/pkglist.txt"
+RUN ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages
 
 # Install _all_ languages for testing
 # RUN ${PACMAN} -Syu --noconfirm \
@@ -111,6 +108,4 @@ USER "${USERNAME}"
 
 WORKDIR "${USERHOME}"
 
-RUN exit 0
-
-# CMD [ "/container_scripts/entrypoint.sh" ]
+ENTRYPOINT [ "${CONTAINER_BASE}/scripts/entrypoint.sh" ]

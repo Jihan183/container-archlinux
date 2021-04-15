@@ -6,7 +6,7 @@ sed -E --silent --sandbox '
 # remove empty lines
 /^$/d
 
-# print pattern space and exchange pattern and holdspace
+# print pattern space and exchange pattern and hold space
 p; x
 
 # main loop
@@ -14,7 +14,7 @@ p; x
     # get the next line or exit if none
     n
 
-    # matches lines that end in -git, -devel or version bound
+    # matches lines that end in -git, -devel or are version bound (ex. <=1.xx)
     /(-git|[<=>].+|-devel)$/ {
         # exhange hold space and pattern space
         x

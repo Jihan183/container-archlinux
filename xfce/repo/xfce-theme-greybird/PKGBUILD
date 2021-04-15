@@ -5,7 +5,7 @@ pkgver=1.0
 pkgrel=1
 pkgdesc=''
 arch=(any)
-url='https:/github.com/shimmerproject/Greybird'
+url='https://github.com/shimmerproject/Greybird'
 license=(GPLv2)
 groups=(xfce-build)
 depends=('gtk-engine-murrine')
@@ -35,10 +35,12 @@ prepare() {
 }
 
 build() {
-  arch-meson source build
+  cd "$pkgname"
+  arch-meson . build
   meson compile -C build
 }
 
 package() {
+  cd "$pkgname"
   DESTDIR="$pkgdir" meson install -C build
 }

@@ -1,16 +1,16 @@
 # Maintainer: Chigozirim Chukwu <noblechuk5[at]web[dot]de>
 
-pkgname='xfce4-clipman-plugin'
+pkgname='xfce4-mixer'
 pkgver=1.0
 pkgrel=1
 pkgdesc=''
 arch=(any)
-url='https://gitlab.xfce.org/panel-plugins/xfce4-clipman-plugin'
+url='https://gitlab.xfce.org/apps/xfce4-mixer'
 license=(GPLv2)
 groups=(xfce-build)
-depends=('libunique' 'libxtst' 'qrencode' 'xfce4-panel')
-makedepends=('git' 'intltool' 'xfce4-dev-tools')
-optdepends=()
+depends=('alsa-lib' 'xfce4-panel')
+makedepends=('xfce4-dev-tools')
+optdepends=('libkeybinder3: Keybinder Support' 'pulse: Pulse backend support' 'oss: OSS sound support')
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
