@@ -1,2 +1,2 @@
-Defaults:%%{USERNAME}% targetpw
-%%{USERNAME}% ALL=(ALL) NOPASSWD: ALL
+Defaults:%%{USER_NAME}% targetpw
+%%{USER_NAME}% ALL=(ALL) NOPASSWD: ALL

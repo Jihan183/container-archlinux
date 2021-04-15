@@ -1,10 +1,13 @@
 #!/bin/bash -e
 
-source /container/scripts/common.sh
+# shellcheck source=container/scripts/common.sh
+source "${CONTAINER_BASE}/scripts/common.sh"
+
+cd "${XFCE_WORK_DIR}"
 
 runuser -- aur build \
     --ignorearch \
-    --arg-file /container/pkglist.txt \
+    --arg-file "${CONTAINER_BASE}/pkglist.txt" \
     --pkgver --database=custom \
     --margs --syncdeps --noconfirm
 

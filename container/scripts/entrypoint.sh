@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source /container/scripts/common.sh
+# shellcheck source=container/scripts/common.sh
+source "${CONTAINER_BASE}/scripts/common.sh"
 
 # if the user has mounted their workdir in the container, then
 # make sure we are pulling it from the working copy

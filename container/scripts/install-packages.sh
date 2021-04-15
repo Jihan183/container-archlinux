@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
-source /container/scripts/common.sh
+# shellcheck source=container/scripts/common.sh
+source "${CONTAINER_BASE}/scripts/common.sh"
 
-mapfile -t all_pkgs < /container/pkglist.txt
+mapfile -t all_pkgs < "${CONTAINER_BASE}/pkglist.txt"
 runuser -- "${PACMAN}" -Syu "${all_pkgs[@]}" --needed --noconfirm

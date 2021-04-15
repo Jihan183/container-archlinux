@@ -1,8 +1,6 @@
 # if ! ((__COMMON_INCLUDED__)); then
 
 export DOWNLOAD_DATE="${DOWNLOAD_DATE:-$(date '+%Y-%m-%d %T')}"
-export USERNAME="${USERNAME:-$USER}"
-export MAIN_BRANCH="${MAIN_BRANCH:-master}"
 
 # https://wiki.archlinux.org/index.php/Aurweb_RPC_interface#API_usage
 AUR_RPC='https://aur.archlinux.org/rpc/?v=5'
