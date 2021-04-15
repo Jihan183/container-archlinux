@@ -14,5 +14,8 @@ if [ -d /container/xfce/workdir ]; then
     echo 'done'
 fi
 
+# install xfce
+runuser -- "${PACMAN}" -Syu "xfce-test" --needed --noconfirm
+
 # start the user's login shell
 "${SHELL:-:}"

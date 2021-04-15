@@ -70,9 +70,8 @@ ARG CFLAGS
 ARG CPPFLAGS
 ENV CFLAGS=" ${CFLAGS:--O2 -pipe}"
 
-# build and install all packages
+# build all packages
 RUN scripts/build-packages.sh "${USER_HOME}/build-results.txt"
-RUN scripts/install-packages.sh
 
 # Install _all_ languages for testing
 # RUN ${PACMAN} -Syu --noconfirm \
