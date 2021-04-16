@@ -37,6 +37,9 @@ jobs:
           EOF
           " | tee --append $GITHUB_ENV
 
+          # Alternative syntax:
+          # https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#multiline-strings
+
           case "${{ github.event_name }}" in
             schedule) echo "TAG=${DOWNLOAD_DATE}" ;;
             release) echo "TAG=${GITHUB_REF}" ;;
@@ -81,8 +84,9 @@ jobs:
         run: echo "Image pushed to ${{ steps.push-to-gh.outputs.registry-paths }}"
 
       - name: Upload Build Packages logs
-        if: ${{ always() }}
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: build-log@${{ env.TAG }}
-          path: /tmp/build-packages
+          path: ${{ steps.build-image.outputs.build_log }}
+          retension-days: 7
