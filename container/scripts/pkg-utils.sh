@@ -10,5 +10,5 @@ runuser -- git clone --depth=1 "${PACMAN_HELPER_URL}" /tmp/"${PACMAN_HELPER}"
 cd /tmp/"${PACMAN_HELPER}"
 runuser -- makepkg --install --force --syncdeps --rmdeps --noconfirm --needed
 
-runuser -- "${PACMAN}" -S aurutils nano --noconfirm --needed
+runuser -- "${PACMAN}" -S aurutils nano man --noconfirm --needed
 # gconf gsettings-desktop-schemas

@@ -62,7 +62,7 @@ RUN chmod -R g+ws "${XFCE_WORK_DIR}"
 
 # line used to invalidate all git clones
 ARG DOWNLOAD_DATE
-ENV DOWNLOAD_DATE="${DOWNLOAD_DATE:-<unset>}"
+ENV DOWNLOAD_DATE="${DOWNLOAD_DATE}"
 ARG MAIN_BRANCH
 ENV MAIN_BRANCH="${MAIN_BRANCH:-master}"
 # useful for affecting compilation
@@ -71,7 +71,7 @@ ARG CPPFLAGS
 ENV CFLAGS=" ${CFLAGS:--O2 -pipe}"
 
 # build all packages
-RUN scripts/build-packages.sh "${USER_HOME}/build-results.txt"
+RUN scripts/build-packages.sh
 
 # Install _all_ languages for testing
 # RUN ${PACMAN} -Syu --noconfirm \

@@ -67,6 +67,7 @@ jobs:
             CPPFLAGS=${{ env.CPPFLAGS }}
           extra-args: |
             --pull
+            --volume /tmp:/tmp:rw
 
       - name: Push to Github Registry
         id: push-to-gh
@@ -78,3 +79,10 @@ jobs:
 
       - name: Print image url
         run: echo "Image pushed to ${{ steps.push-to-gh.outputs.registry-paths }}"
+
+      - name: Upload Build Packages logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-log@${{ env.TAG }}
+          path: /tmp/build-packages
