@@ -29,7 +29,7 @@ jobs:
           password: ${{ env.REGISTRY_PASSWORD }}
           registry: ${{ env.IMAGE_REGISTRY }}
 
-      - name: Read build args from environment
+      - name: Read and setup build args from environment
         # https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
         run: |
           eval "cat <<EOF
@@ -37,14 +37,16 @@ jobs:
           EOF
           " | tee --append $GITHUB_ENV
 
-          # Alternative syntax:
-          # https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#multiline-strings
-
           case "${{ github.event_name }}" in
             schedule) echo "TAG=${DOWNLOAD_DATE}" ;;
             release) echo "TAG=${GITHUB_REF}" ;;
             push) echo "TAG=${GITHUB_SHA:0:12}" ;;
           esac | tee --append $GITHUB_ENV
+
+          # https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#multiline-strings
+          echo 'TIMESTAMP<<EOF' | tee --append $GITHUB_ENV
+          date --date="${DOWNLOAD_DATE}" '+%s' | tee --append $GITHUB_ENV
+          echo 'EOF' | tee --append $GITHUB_ENV
 
       - name: Build container
         id: build-image
@@ -71,6 +73,7 @@ jobs:
           extra-args: |
             --pull
             --volume /tmp:/tmp
+            --timestamp ${{ env.TIMESTAMP }}
 
       - name: Push to Github Registry
         id: push-to-gh

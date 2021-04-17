@@ -4,25 +4,23 @@
 source "${CONTAINER_BASE}/scripts/common.sh"
 
 cd "${XFCE_WORK_DIR}"
+tmp="$(runuser -- mktemp -d /tmp/tmp.XXXXXXXX)"
 
 if [ -n "${ACTIONS_CI}" ]; then
-    log="$(mktemp /tmp/build-log.XXXXXXXXXXXX)" && {
-        echo "::set-output name=build_log::$log"
-    }
+    log="$tmp/build-log"
+    echo "::set-output name=build_log::$log"
 fi
 
 echo -en "${log:+\n\nLog output will be written to $log\n\n}"
 {
-    # shellcheck disable=SC2016
-    exec 4>&1
-    ls -l /proc/self/fd
-    runuser -- ls -l /proc/self/fd
+    result_pipe="$tmp/result_pipe"
+    runuser -- mkfifo --mode=600 "$result_pipe"
+    dd status=none if="$result_pipe" iflag=fullblock &
 
     runuser -- aur build \
         --ignorearch \
         --arg-file "${CONTAINER_BASE}/pkglist.txt" \
-        --results /dev/fd/4 \
+        --results "$result_pipe" \
         --pkgver --database=custom \
-        --margs --syncdeps --noconfirm | dd status=none of="${log:-/dev/fd/1}"
-    exec 4>&-
+        --margs --syncdeps --noconfirm > "${log:-/dev/fd/1}"
 } 2>&1
