@@ -11,14 +11,15 @@ if [ -n "${ACTIONS_CI}" ]; then
     }
 fi
 
+echo -en "${log:+\n\nLog output will be written to $log\n\n}"
 {
-    echo -en "${log:+\n\nLog output will be written to $log\n\n}"
+    # shellcheck disable=SC1004,SC2016
     exec {res}>&1
     runuser -- aur build \
         --ignorearch \
         --arg-file "${CONTAINER_BASE}/pkglist.txt" \
-        --results /proc/$$/fd/${res} \
+        --results /proc/self/fd/${res} \
         --pkgver --database=custom \
-        --margs --syncdeps --noconfirm >"${log:-/dev/fd/1}"
-    exec >&${res}-
+        --margs --syncdeps --noconfirm | dd status=none of="${log:-/dev/fd/1}"
+    exec {res}>&-
 } 2>&1

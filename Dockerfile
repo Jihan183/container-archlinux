@@ -2,6 +2,7 @@ FROM archlinux:latest
 LABEL maintainer="noblechuk5[at]web[dot]de"
 LABEL name="xfce-test-archlinux"
 LABEL description="ArchLinux environment for hacking on xfce-test"
+LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-archlinux"
 
 ARG TRAVIS_CI
 ARG ACTIONS_CI

@@ -89,4 +89,4 @@ jobs:
         with:
           name: build-log@${{ env.TAG }}
           path: ${{ steps.build-image.outputs.build_log }}
-          retension-days: 7
+          retention-days: 7
