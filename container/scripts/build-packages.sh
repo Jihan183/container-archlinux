@@ -15,7 +15,7 @@ echo -en "${log:+\n\nLog output will be written to $log\n\n}"
 {
     result_pipe="$tmp/result_pipe"
     runuser -- mkfifo --mode=600 "$result_pipe"
-    dd status=none if="$result_pipe" iflag=fullblock &
+    cat "$result_pipe" &
 
     runuser -- aur build \
         --ignorearch \
