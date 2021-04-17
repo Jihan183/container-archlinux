@@ -70,7 +70,7 @@ jobs:
             CPPFLAGS=${{ env.CPPFLAGS }}
           extra-args: |
             --pull
-            --volume /tmp:/tmp:rw
+            --volume /tmp:/tmp
 
       - name: Push to Github Registry
         id: push-to-gh

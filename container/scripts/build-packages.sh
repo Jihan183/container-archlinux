@@ -13,13 +13,16 @@ fi
 
 echo -en "${log:+\n\nLog output will be written to $log\n\n}"
 {
-    # shellcheck disable=SC1004,SC2016
-    exec {res}>&1
+    # shellcheck disable=SC2016
+    exec 4>&1
+    ls -l /proc/self/fd
+    runuser -- ls -l /proc/self/fd
+
     runuser -- aur build \
         --ignorearch \
         --arg-file "${CONTAINER_BASE}/pkglist.txt" \
-        --results /proc/self/fd/${res} \
+        --results /dev/fd/4 \
         --pkgver --database=custom \
         --margs --syncdeps --noconfirm | dd status=none of="${log:-/dev/fd/1}"
-    exec {res}>&-
+    exec 4>&-
 } 2>&1
