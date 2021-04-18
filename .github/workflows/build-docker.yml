@@ -70,7 +70,6 @@ jobs:
             DOWNLOAD_DATE=${{ env.DOWNLOAD_DATE }}
             PACMAN_HELPER=${{ env.PACMAN_HELPER }}
             PACMAN_HELPER_URL=${{ env.PACMAN_HELPER_URL }}
-            CONTAINER_BASE=${{ env.CONTAINER_BASE }}
             CFLAGS=${{ env.CFLAGS }}
             CPPFLAGS=${{ env.CPPFLAGS }}
           extra-args: |

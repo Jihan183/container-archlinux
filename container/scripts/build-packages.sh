@@ -22,4 +22,4 @@ runuser -- mkfifo --mode=600 "$result_pipe"
         --margs --syncdeps --noconfirm >"${log:-/dev/fd/1}"
 } 2>&1 &
 
-stdbuf -oL tail --pid="$!" --silent --bytes=+1 /proc/$!/fd/1 - <"$result_pipe"
+stdbuf -oL tail --pid="$!" --follow --silent --bytes=+1 /proc/$!/fd/1 - <"$result_pipe"
