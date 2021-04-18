@@ -13,6 +13,9 @@ ENV DISPLAY="${DISPLAY}"
 ARG USER_SHELL
 ENV USER_SHELL="${USER_SHELL}"
 
+# identify who is running this build
+RUN id
+
 # base packages
 RUN pacman -Syu base-devel git ${USER_SHELL} --noconfirm --needed
 

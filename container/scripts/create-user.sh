@@ -11,7 +11,7 @@ groupadd --gid "${USER_ID}" "${USER_NAME}" \
                 "${USER_NAME}"
 
 install --owner="${USER_NAME}" -dm755 "${USER_HOME}"/.local/{,bin}
-install -dm750 /etc/sudoers.d/
+install -dm750 /etc/sudoers.d/ --owner=root
 sed "s:%{USER_NAME}%:${USER_NAME}:g" "${CONTAINER_BASE}/etc/sudoers.d/20-xfce-test.in" \
         | tee /etc/sudoers.d/20-xfce-test
 
