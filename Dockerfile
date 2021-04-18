@@ -1,29 +1,29 @@
 FROM archlinux:latest
-LABEL maintainer="noblechuk5[at]web[dot]de"
-LABEL name="xfce-test-archlinux"
-LABEL description="ArchLinux environment for hacking on xfce-test"
+LABEL org.opencontainers.image.authors="noblechuk5[at]web[dot]de"
+LABEL org.opencontainers.image.title="xfce-test-archlinux"
+LABEL org.opencontainers.image.description="ArchLinux environment for hacking on xfce-test"
 LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-archlinux"
 
 ARG TRAVIS_CI
 ARG ACTIONS_CI
 
 ARG DISPLAY
-ENV DISPLAY="${DISPLAY:-:2}"
+ENV DISPLAY="${DISPLAY}"
 
 ARG USER_SHELL
-ENV USER_SHELL="${USER_SHELL:-zsh}"
+ENV USER_SHELL="${USER_SHELL}"
 
 # base packages
 RUN pacman -Syu base-devel git ${USER_SHELL} --noconfirm --needed
 
 ARG CONTAINER_BASE
-ENV CONTAINER_BASE="${CONTAINER_BASE:-/container/xfce}"
+ENV CONTAINER_BASE="${CONTAINER_BASE}"
 
 WORKDIR "${CONTAINER_BASE}"
 
 # Setup the test user
 ARG USER_NAME
-ENV USER_NAME="${USER_NAME:-xfcetest}"
+ENV USER_NAME="${USER_NAME}"
 ENV USER="${USER_NAME}"
 ENV USER_ID=100
 ENV USER_HOME="/home/${USER_NAME}"
@@ -46,7 +46,7 @@ RUN scripts/create-local-aur.sh
 
 # build pacman helper
 ARG PACMAN_HELPER
-ENV PACMAN_HELPER="${PACMAN_HELPER:-yay}"
+ENV PACMAN_HELPER="${PACMAN_HELPER}"
 ARG PACMAN_HELPER_URL
 ENV PACMAN_HELPER_URL="${PACMAN_HELPER_URL:-https://aur.archlinux.org/${PACMAN_HELPER}.git}"
 ENV PACMAN="${PACMAN_HELPER}"
@@ -65,11 +65,11 @@ RUN chmod -R g+ws "${XFCE_WORK_DIR}"
 ARG DOWNLOAD_DATE
 ENV DOWNLOAD_DATE="${DOWNLOAD_DATE}"
 ARG MAIN_BRANCH
-ENV MAIN_BRANCH="${MAIN_BRANCH:-master}"
+ENV MAIN_BRANCH="${MAIN_BRANCH}"
 # useful for affecting compilation
 ARG CFLAGS
 ARG CPPFLAGS
-ENV CFLAGS=" ${CFLAGS:--O2 -pipe}"
+ENV CFLAGS="${CFLAGS}"
 
 # build all packages
 RUN scripts/build-packages.sh

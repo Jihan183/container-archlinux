@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-# shellcheck source=app/scripts/common-args.sh
-source "$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")/common-args.sh"
+# shellcheck source=app/scripts/vars.sh
+source "$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")/vars.sh"
 
 mkdir -p xfce-workdir
 cd xfce-workdir

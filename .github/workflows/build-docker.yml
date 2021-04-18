@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Login to GitHub Packages Docker Registry
+      - name: Login to GitHub Container Registry
         uses: redhat-actions/podman-login@v1
         with:
           username: ${{ env.REGISTRY_USER }}
@@ -33,9 +33,11 @@ jobs:
         # https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
         run: |
           eval "cat <<EOF
-          $(egrep -v '^#' .env)
+          $(grep -Ev '^#' .env)
           EOF
           " | tee --append $GITHUB_ENV
+
+          mkdir --parents ${GITHUB_WORKSPACE}/build/logs
 
           case "${{ github.event_name }}" in
             schedule) echo "TAG=${DOWNLOAD_DATE}" ;;
@@ -62,6 +64,7 @@ jobs:
             TRAVIS_CI=${{ env.TRAVIS_CI }}
             USER_NAME=${{ env.USER_NAME }}
             USER_SHELL=${{ env.USER_SHELL }}
+            CONTAINER_BASE=${{ env.CONTAINER_BASE }}
             DISPLAY=${{ env.DISPLAY }}
             MAIN_BRANCH=${{ env.MAIN_BRANCH }}
             DOWNLOAD_DATE=${{ env.DOWNLOAD_DATE }}
@@ -71,9 +74,10 @@ jobs:
             CFLAGS=${{ env.CFLAGS }}
             CPPFLAGS=${{ env.CPPFLAGS }}
           extra-args: |
-            --pull
-            --volume /tmp:/tmp
             --timestamp ${{ env.TIMESTAMP }}
+            --userns=host
+            --volume=${{ env.GITHUB_WORKSPACE }}/build:/tmp
+        timeout-minutes: 50
 
       - name: Push to Github Registry
         id: push-to-gh
@@ -91,5 +95,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-log@${{ env.TAG }}
-          path: ${{ steps.build-image.outputs.build_log }}
+          path: ${{ env.GITHUB_WORKSPACE }}/build/build-logs
           retention-days: 7
