@@ -10,7 +10,7 @@ eval "$(
     }'
 )"
 
-podman build \
+docker build \
     --build-arg USER_NAME \
     --build-arg USER_SHELL \
     --build-arg CONTAINER_BASE \
@@ -24,7 +24,5 @@ podman build \
     --build-arg CONTAINER_BASE \
     --build-arg CFLAGS \
     --build-arg CPPFLAGS \
-    --format docker \
-    --jobs=0 \
     --network=host \
-    --tag xfce-test/xfce-test:archlinux --file Dockerfile .
+    --tag xfce-test/xfce-test-archlinux --file Dockerfile .

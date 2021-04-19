@@ -31,12 +31,11 @@ ENV USER="${USER_NAME}"
 ENV USER_ID=100
 ENV USER_HOME="/home/${USER_NAME}"
 
-COPY --chown="${USER_ID}" container/scripts "${CONTAINER_BASE}/scripts"
+COPY --chown="${USER_ID}" container/scripts/common.sh "${CONTAINER_BASE}/scripts/"
 COPY --chown="${USER_ID}" container/etc "${CONTAINER_BASE}/etc"
 COPY --chown="${USER_ID}" container/pkglist.txt "${CONTAINER_BASE}/pkglist.txt"
-RUN ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages
-RUN ln -s "${CONTAINER_BASE}/scripts/install-packages.sh" /usr/local/bin/install-packages
 
+COPY --chown="${USER_ID}" container/scripts/create-user.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/create-user.sh
 
 # for makepkg
@@ -45,6 +44,7 @@ ENV BUILDDIR=/var/cache/makepkg-build/
 RUN install -dm755 --owner="${USER_NAME}" ${BUILDDIR}
 
 # install the local AUR database for hosting xfce packages
+COPY --chown="${USER_ID}" container/scripts/create-local-aur.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/create-local-aur.sh
 
 # build pacman helper
@@ -53,6 +53,7 @@ ENV PACMAN_HELPER="${PACMAN_HELPER}"
 ARG PACMAN_HELPER_URL
 ENV PACMAN_HELPER_URL="${PACMAN_HELPER_URL:-https://aur.archlinux.org/${PACMAN_HELPER}.git}"
 ENV PACMAN="${PACMAN_HELPER}"
+COPY --chown="${USER_ID}" container/scripts/pkg-utils.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/pkg-utils.sh
 
 # install more packages required for the next few steps
@@ -75,6 +76,8 @@ ARG CPPFLAGS
 ENV CFLAGS="${CFLAGS}"
 
 # build all packages
+COPY --chown="${USER_ID}" container/scripts/build-packages.sh "${CONTAINER_BASE}/scripts/"
+RUN ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages
 RUN scripts/build-packages.sh
 
 # Install _all_ languages for testing
@@ -114,6 +117,7 @@ RUN scripts/build-packages.sh
 
 # RUN ln --symbolic /data "${USER_HOME}/Desktop/data"
 
+COPY --chown="${USER_ID}" container/scripts/user-configs.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/user-configs.sh
 
 # switch to the test-user
@@ -121,4 +125,5 @@ USER "${USER_NAME}"
 
 WORKDIR "${USER_HOME}"
 
+COPY --chown="${USER_ID}" container/scripts/entrypoint.sh "${CONTAINER_BASE}/scripts/"
 ENTRYPOINT "${CONTAINER_BASE}/scripts/entrypoint.sh"

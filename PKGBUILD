@@ -1,7 +1,6 @@
 # Maintainer: Chigozirim Chukwu <noblechuk5[at]web[dot]de>
 
-pkgbase='container-archlinux'
-pkgname='xfce-test-container-archlinux'
+pkgname='xfce-test-archlinux'
 pkgver=1.0
 pkgrel=1
 pkgdesc=''
@@ -9,9 +8,12 @@ arch=(any)
 url='https://github.com/xfce-test/container-archlinux'
 license=(GPLv3)
 groups=(xfce-test)
-depends=(jq kittypack python podman)
+depends=(jq docker x11docker)
 makedepends=()
-optdepends=()
+optdepends=(
+  'kittypack: for downloading package dependencies from arch main repos'
+  'podman-docker: prefer podman to docker'
+)
 options=()
 source=("$pkgname::git+$url.git#branch=main")
 md5sums=('SKIP')
@@ -23,10 +25,8 @@ pkgver() {
 
 build() {
   cd "$pkgname"
-  python setup.py build
 }
 
 package() {
   cd "$pkgname"
-  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
 }
