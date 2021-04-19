@@ -5,19 +5,25 @@ source "${CONTAINER_BASE}/scripts/common.sh"
 
 cd "${XFCE_WORK_DIR}"
 
-if [ -n "${ACTIONS_CI}" ]; then
-    log="/tmp/build-log"
-fi
+export LOGDEST="${LOGDEST:-/tmp/makelogs}"
 
-echo -en "${log:+\nLog output will be written to: $log\n}"
+echo -en "\nLog output will be written to: $LOGDEST\n"
 
-result_pipe="/tmp/result_pipe"
-runuser -- mkfifo --mode=600 "$result_pipe"
-runuser -- aur build \
+runuser -- env LC_ALL=C aur build \
     --ignorearch \
     --arg-file "${CONTAINER_BASE}/pkglist.txt" \
-    --results "$result_pipe" --remove \
-    --pkgver --database=custom \
-    --margs --syncdeps --noconfirm 2>&1 >"${log:-/dev/fd/1}" &
+    --remove --pkgver --database=custom \
+    --margs --syncdeps --noconfirm --log | stdbuf -oL sed --silent -E '
+        /Making package:/{
+            x
+            /^$/{g;p}
+            x
+        }
+        /Finished making:/{
+            G
+            /^.+: (\S+).+\n.+: \1.+$/M{P;z;h}
+        }'
 
-stdbuf -oL tail --pid="$!" --follow --silent --bytes=+1 /proc/$!/fd/1 - <"$result_pipe"
+# shellcheck disable=SC2016
+runuser -- aur repo -lq | xargs -I {} bash -c '
+    cat "${LOGDEST}"/{}*{prepare,build,package}.log | gzip > "${LOGDEST}"/{}-log.gz'

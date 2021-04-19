@@ -11,7 +11,6 @@ eval "$(
 )"
 
 podman build \
-    --no-cache \
     --build-arg USER_NAME \
     --build-arg USER_SHELL \
     --build-arg CONTAINER_BASE \

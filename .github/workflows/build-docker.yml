@@ -37,7 +37,8 @@ jobs:
           EOF
           " | tee --append $GITHUB_ENV
 
-          mkdir --parents ${GITHUB_WORKSPACE}/build/logs
+          mkdir --parents ${GITHUB_WORKSPACE}/build
+          setfacl --default --modify u::rwx,g::rwx,o::- ${GITHUB_WORKSPACE}/build
 
           case "${{ github.event_name }}" in
             schedule) echo "TAG=${DOWNLOAD_DATE}" ;;
@@ -75,7 +76,7 @@ jobs:
           extra-args: |
             --timestamp ${{ env.TIMESTAMP }}
             --userns=host
-            --volume=${{ github.workspace }}/build:/tmp
+            --volume=${{ github.workspace }}/build:/tmp:U
         timeout-minutes: 50
 
       - name: Push to Github Registry
@@ -94,5 +95,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-log@${{ env.TAG }}
-          path: ${{ github.workspace }}/build/build-log
+          path: ${{ github.workspace }}/build/**/*-log.gz
           retention-days: 7
