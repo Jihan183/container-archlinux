@@ -11,7 +11,6 @@ fi
 
 x11docker --desktop \
     --size 1200x800 \
-    --display 2 \
     --cap-default \
     --network=private \
     --init=none \
@@ -24,7 +23,6 @@ x11docker --desktop \
     --showenv \
     --showid \
     --showpid1 \
-    --podman \
     --keepcache \
     -- \
     --systemd=true \

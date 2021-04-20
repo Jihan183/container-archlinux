@@ -7,9 +7,6 @@ LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-
 ARG TRAVIS_CI
 ARG ACTIONS_CI
 
-ARG DISPLAY
-ENV DISPLAY="${DISPLAY}"
-
 ARG USER_SHELL
 ENV USER_SHELL="${USER_SHELL}"
 

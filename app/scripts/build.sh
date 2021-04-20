@@ -15,7 +15,6 @@ docker build \
     --build-arg USER_NAME \
     --build-arg USER_SHELL \
     --build-arg CONTAINER_BASE \
-    --build-arg DISPLAY \
     --build-arg MAIN_BRANCH \
     --build-arg DOWNLOAD_DATE \
     --build-arg TRAVIS_CI \

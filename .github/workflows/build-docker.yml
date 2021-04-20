@@ -66,7 +66,6 @@ jobs:
             USER_NAME=${{ env.USER_NAME }}
             USER_SHELL=${{ env.USER_SHELL }}
             CONTAINER_BASE=${{ env.CONTAINER_BASE }}
-            DISPLAY=${{ env.DISPLAY }}
             MAIN_BRANCH=${{ env.MAIN_BRANCH }}
             DOWNLOAD_DATE=${{ env.DOWNLOAD_DATE }}
             PACMAN_HELPER=${{ env.PACMAN_HELPER }}
