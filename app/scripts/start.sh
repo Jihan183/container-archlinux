@@ -9,13 +9,13 @@ if [[ -z "$LOCAL_XFCE" && -d "$HOME/Dev/xfce-workdir" ]]; then
     LOCAL_XFCE=$HOME/Dev/xfce-workdir
 fi
 
+#     --keepcache \
 x11docker --desktop \
+    --interactive \
     --size 1200x800 \
     --cap-default \
-    --newprivileges=no \
     --network=private \
     --init=none \
-    --dbus \
     --xephyr \
     --user=RETAIN \
     --name xfce-test \
@@ -23,9 +23,7 @@ x11docker --desktop \
     --showenv \
     --showid \
     --showpid1 \
-    --keepcache \
     -- \
-    --systemd=true \
     ${LOCAL_XFCE:+--volume "$LOCAL_XFCE:/container/xfce/workdir:rw"} \
     -- \
-    xfce-test/xfce-test-archlinux:latest startxfce4
+    xfce-test/xfce-test-archlinux:latest
