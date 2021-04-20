@@ -6,7 +6,6 @@ fi
 
 #     --keepcache \
 x11docker --desktop \
-    --interactive \
     --size 1280x720 \
     --cap-default \
     --network=private \

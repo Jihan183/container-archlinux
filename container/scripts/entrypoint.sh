@@ -28,10 +28,13 @@ source "${CONTAINER_BASE}/scripts/common.sh"
 
 # start xfce?
 if ((${#@})); then
+    echo Running user supplied program...
     exec "${@}"
+elif [ -t 0 ]; then
+    echo starting interactive session...
+    exec "${SHELL:-/bin/sh}"
 else
-    startxfce4 &
-    if [ -t 0 ]; then
-        exec "${SHELL:-/bin/sh}"
-    fi
+    echo starting xfce4 session...
+    mv ~/.xsession-errors ~/.xsession-errors.old
+    exec startxfce4 > ~/.xsession-errors 2>&1
 fi
