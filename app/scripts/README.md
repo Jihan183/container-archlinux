@@ -1,8 +1,10 @@
 ## App Scripts
 
-Many of the scripts here are simply for managing the PKGBUILD files of the various xfce components.
+Scripts used for house keeping and maintaining a local copy of the container.
 
-* makedeps.sh: This script is used to generate a list of dependencies for each xfce package. It acts as the main driver for the other two (`dups.sed.sh`, and `normalize.awk`)
-* build.sh: Builds the container
-* start.sh: Runs the built container (if any)
-* setup-workdir.sh: Clones each package's repository into the current directory under `xfce/workdir`. Ignores existing packages
+File      | Description
+--------- | ------------
+`build.sh` | use to build the container
+`start.sh` | run the built container
+`setup-workdir.sh` | useful for an initial setup of a working directory. It clones each package's repository into the current directory under `xfce-workdir`.<br/> Does not delete existing work directories, but will add any non-existing packages
+`makedeps.sh`    | This script is used to generate a list of dependencies for each xfce package. It acts as the main driver for the other two (`dups.sed.sh`, and `normalize.awk`)

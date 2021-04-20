@@ -85,7 +85,7 @@ jobs:
           name: build-log@${{ env.TAG }}
           # workaround for: https://github.com/actions/upload-artifact/issues/192
           path: |
-            !${{ github.workspace }}/build/**/aurutils*
+            !${{ github.workspace }}/**/aurutils*
             ${{ github.workspace }}/build/**/*-log.gz
           retention-days: 7
 

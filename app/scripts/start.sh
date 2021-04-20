@@ -12,10 +12,10 @@ fi
 x11docker --desktop \
     --size 1200x800 \
     --cap-default \
+    --newprivileges=no \
     --network=private \
     --init=none \
     --dbus \
-    --hostdbus \
     --xephyr \
     --user=RETAIN \
     --name xfce-test \
