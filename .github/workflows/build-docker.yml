@@ -79,6 +79,17 @@ jobs:
             --volume=${{ github.workspace }}/build:/tmp:U
         timeout-minutes: 50
 
+      - name: Upload Build Packages logs
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-log@${{ env.TAG }}
+          # workaround for: https://github.com/actions/upload-artifact/issues/192
+          path: |
+            !${{ github.workspace }}/build/**/aurutils*
+            ${{ github.workspace }}/build/**/*-log.gz
+          retention-days: 7
+
       - name: Push to Github Registry
         id: push-to-gh
         uses: redhat-actions/push-to-registry@v2
@@ -89,14 +100,3 @@ jobs:
 
       - name: Print image url
         run: echo "Image pushed to ${{ steps.push-to-gh.outputs.registry-paths }}"
-
-      - name: Upload Build Packages logs
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-log@${{ env.TAG }}
-          # workaround for: https://github.com/actions/upload-artifact/issues/192
-          path: |
-            !${{ github.workspace }}/**/aurutils*
-            ${{ github.workspace }}/build/**/*-log.gz
-          retention-days: 7

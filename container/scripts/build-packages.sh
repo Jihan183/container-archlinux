@@ -1,11 +1,11 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 # shellcheck source=container/scripts/common.sh
 source "${CONTAINER_BASE}/scripts/common.sh"
 
 cd "${XFCE_WORK_DIR}"
 
-export LOGDEST="${LOGDEST:-/tmp/makelogs}"
+LOGDEST="${LOGDEST:-/tmp/makelogs}"
 
 echo -en "\nLog output will be written to: $LOGDEST\n"
 

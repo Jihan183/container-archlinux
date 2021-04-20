@@ -11,6 +11,7 @@ eval "$(
 )"
 
 docker build \
+    --pull \
     --build-arg USER_NAME \
     --build-arg USER_SHELL \
     --build-arg CONTAINER_BASE \
