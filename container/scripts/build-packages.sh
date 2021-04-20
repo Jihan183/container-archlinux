@@ -24,6 +24,9 @@ runuser -- env LC_ALL=C LOGDEST="$LOGDEST" aur build \
             /^.+: (\S+).+\n.+: \1.+$/M{P;z;h}
         }'
 
+# remove the group
+runuser -- "${PACMAN}" -R 'xfce-test' --noconfirm
+
 # shellcheck disable=SC2016
 runuser -- aur repo --list | cut -s --fields=1 | xargs -I {} bash -c '
     cat "${LOGDEST}"/{}*{prepare,build,package}.log | gzip > "${LOGDEST}"/{}-log.gz'

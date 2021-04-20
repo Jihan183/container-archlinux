@@ -37,10 +37,10 @@ prepare() {
 build() {
   cd "$pkgname"
   ./autogen.sh \
-    --disable-dependency-tracking \
+     \
     --prefix=/usr \
     --sysconfdir=/etc \
-    --libexecdir=/usr/lib/xfce4 \
+    --libexecdir=/usr/lib/xfce4  \
     --localstatedir=/var \
     --enable-gtk-doc \
     --disable-static \

@@ -31,5 +31,7 @@ if ((${#@})); then
     exec "${@}"
 else
     startxfce4 &
-    exec "${SHELL:-/bin/sh}"
+    if [ -t 0 ]; then
+        exec "${SHELL:-/bin/sh}"
+    fi
 fi

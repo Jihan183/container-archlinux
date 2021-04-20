@@ -40,7 +40,7 @@ build() {
   # version of vala currently available on arch
   ./autogen.sh  \
     --prefix=/usr \
-    --libexecdir=/usr/lib \
+    --libexecdir=/usr/lib/xfce4 \
     --localstatedir=/var \
     --sysconfdir=/etc \
     --enable-maintainer-mode \

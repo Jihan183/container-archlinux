@@ -40,7 +40,7 @@ build() {
     --disable-static \
     --prefix=/usr \
     --sysconfdir=/etc \
-    --libexecdir=/usr/lib \
+    --libexecdir=/usr/lib/xfce4 \
     --localstatedir=/var \
     --enable-gtk-doc
   make

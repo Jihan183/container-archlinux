@@ -39,7 +39,7 @@ build() {
   ./autogen.sh \
     --prefix=/usr \
     --sysconfdir=/etc \
-    --libexecdir=/usr/lib \
+    --libexecdir=/usr/lib/xfce4 \
     --localstatedir=/var \
     --disable-static \
     --disable-debug

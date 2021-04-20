@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if ! docker images --filter reference='xfce-test/xfce-test-archlinux' --filter dangling=false; then
-    echo "No images found in the image storage"
-    exit 1
-fi
-
 if [[ -z "$LOCAL_XFCE" && -d "$HOME/Dev/xfce-workdir" ]]; then
     LOCAL_XFCE=$HOME/Dev/xfce-workdir
 fi
@@ -12,7 +7,7 @@ fi
 #     --keepcache \
 x11docker --desktop \
     --interactive \
-    --size 1200x800 \
+    --size 1280x720 \
     --cap-default \
     --network=private \
     --init=none \
