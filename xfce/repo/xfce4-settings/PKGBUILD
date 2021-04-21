@@ -8,7 +8,7 @@ arch=(any)
 url='https://gitlab.xfce.org/xfce/xfce4-settings'
 license=(GPLv2)
 groups=(xfce-test)
-depends=('adwaita-icon-theme'  'exo' 'garcon' 'gnome-themes-extra' 'libxfce4ui' 'libxklavier' 'xfconf' 'fontconfig' 'xrandr')
+depends=('adwaita-icon-theme'  'exo' 'garcon' 'gnome-themes-extra' 'libxfce4ui' 'libxklavier' 'xfconf' 'fontconfig' 'libxrandr')
 makedepends=('git' 'intltool' 'xfce4-dev-tools')
 optdepends=(
   'colord: colord support'

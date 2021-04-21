@@ -83,7 +83,7 @@ jobs:
         env:
           BUILD_LOGS: ${{ steps.build-image.outputs.build_logs }}
 
-      - name: Push to Github Registry
+      - name: Push Image to Github Registry
         id: push-to-gh
         uses: redhat-actions/push-to-registry@v2
         with:
@@ -94,7 +94,7 @@ jobs:
       - name: Print image url
         run: echo "Image pushed to ${{ steps.push-to-gh.outputs.registry-paths }}"
 
-      - name: Upload Build Packages logs
+      - name: Upload build logs
         if: always()
         uses: actions/upload-artifact@v2
         with:
