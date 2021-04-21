@@ -8,9 +8,9 @@ arch=(any)
 url='https://gitlab.xfce.org/apps/xfce4-screensaver'
 license=(GPLv2)
 groups=(xfce-test)
-depends=('dbus-glib' 'garcon' 'libwnck3' 'libxklavier' 'libxss' 'python-gobject' 'xfconf')
+depends=('dbus-glib' 'garcon' 'libwnck3' 'libxklavier' 'libxss' 'python-gobject' 'xfconf' 'libxrandr')
 makedepends=('exo' 'intltool' 'systemd' 'xfce4-dev-tools')
-optdepends=()
+optdepends=('libgl: build with GL support')
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
@@ -36,7 +36,15 @@ prepare() {
 
 build() {
   cd "$pkgname"
-  ./autogen.sh  --prefix=/usr/     --sbindir=/usr/bin     --libexecdir=/usr/lib/xfce4 --localstatedir=/var     --sysconfdir=/etc     --disable-debug          --disable-upower-glib     --disable-static     --enable-maintainer-mode --enable-systemd --enable-gtk-doc     --enable-xrandr --enable-xcursor --enable-libnotify     --enable-epoxy --enable-startup-notification --enable-xsync     --enable-render --enable-randr --enable-xpresent     --enable-compositor --enable-libxklavier --enable-pluggable-dialogs     --enable-sound-settings --enable-polkit --disable-network-manager     --enable-notifications --enable-gio-unix --enable-gudev     --enable-exif --enable-pcre --enable-vala     --enable-introspection --enable-sound-settings --enable-gio-unix          --with-perl-options=INSTALLDIRS=vendor
+  ./autogen.sh \
+    --prefix=/usr \
+    --sbindir=/usr/bin \
+    --libexecdir=/usr/lib/xfce4 \
+    --localstatedir=/var \
+    --sysconfdir=/etc \
+    --disable-debug \
+    --disable-static \
+    --enable-maintainer-mode
   make
 }
 

@@ -37,19 +37,13 @@ jobs:
           EOF
           " | tee --append $GITHUB_ENV
 
-          mkdir --parents ${GITHUB_WORKSPACE}/build
-          setfacl --default --modify u::rwx,g::rwx,o::- ${GITHUB_WORKSPACE}/build
-
           case "${{ github.event_name }}" in
             schedule) echo "TAG=${DOWNLOAD_DATE}" ;;
             release) echo "TAG=${GITHUB_REF}" ;;
             push) echo "TAG=${GITHUB_SHA:0:12}" ;;
           esac | tee --append $GITHUB_ENV
 
-          # https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#multiline-strings
-          echo 'TIMESTAMP<<EOF' | tee --append $GITHUB_ENV
-          date --date="${DOWNLOAD_DATE}" '+%s' | tee --append $GITHUB_ENV
-          echo 'EOF' | tee --append $GITHUB_ENV
+          echo "TIMESTAMP=$(date --date="${DOWNLOAD_DATE}" '+%s')" | tee --append $GITHUB_ENV
 
       - name: Build container
         id: build-image
@@ -74,9 +68,20 @@ jobs:
             CPPFLAGS=${{ env.CPPFLAGS }}
           extra-args: |
             --timestamp ${{ env.TIMESTAMP }}
-            --userns=host
-            --volume=${{ github.workspace }}/build:/tmp:U
         timeout-minutes: 50
+
+      - name: Copy build logs
+        run: |
+          mkdir --parents build
+          podman create --name xfce-test ${{ steps.build-image.outputs.image }}
+          export mnt="$(buildah mount xfce-test)"
+          xargs --max-args=1 bash -c '
+            cat "${mnt}/$BUILD_LOGS/$1"*{prepare,build,package}.log | gzip > build/"$1"-log.gz
+          ' - < container/pkglist.txt
+          buildah unmount xfce-test
+          find build -maxdepth 1 -name '*.gz'
+        env:
+          BUILD_LOGS: ${{ steps.build-image.outputs.build_logs }}
 
       - name: Push to Github Registry
         id: push-to-gh
@@ -94,8 +99,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-log@${{ env.TAG }}
-          # workaround for: https://github.com/actions/upload-artifact/issues/192
-          path: |
-            !${{ github.workspace }}/**/aurutils*
-            ${{ github.workspace }}/build/**/*-log.gz
+          path: ${{ github.workspace }}/build/*-log.gz
           retention-days: 7

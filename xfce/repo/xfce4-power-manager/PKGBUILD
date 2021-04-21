@@ -8,7 +8,7 @@ arch=(any)
 url='https://gitlab.xfce.org/xfce/xfce4-power-manager'
 license=(GPLv2)
 groups=(xfce-test)
-depends=('hicolor-icon-theme' 'libnotify' 'libxfce4ui' 'upower' 'libxrandr' 'xfconf')
+depends=('hicolor-icon-theme' 'libnotify' 'libxfce4ui' 'upower' 'libxrandr' 'xfconf' 'glib2')
 makedepends=('git' 'intltool' 'xfce4-dev-tools' 'xfce4-panel')
 optdepends=()
 provides=("$pkgname")
@@ -36,7 +36,18 @@ prepare() {
 
 build() {
   cd "$pkgname"
-  ./autogen.sh  --prefix=/usr/     --sbindir=/usr/bin     --libexecdir=/usr/lib/xfce4 --localstatedir=/var     --sysconfdir=/etc     --disable-debug          --disable-upower-glib     --disable-static     --enable-maintainer-mode --enable-systemd --enable-gtk-doc     --enable-xrandr --enable-xcursor --enable-libnotify     --enable-epoxy --enable-startup-notification --enable-xsync     --enable-render --enable-randr --enable-xpresent     --enable-compositor --enable-libxklavier --enable-pluggable-dialogs     --enable-sound-settings --enable-polkit --disable-network-manager     --enable-notifications --enable-gio-unix --enable-gudev     --enable-exif --enable-pcre --enable-vala     --enable-introspection --enable-sound-settings --enable-gio-unix          --with-perl-options=INSTALLDIRS=vendor
+  ./autogen.sh \
+    --prefix=/usr \
+    --sbindir=/usr/bin \
+    --libexecdir=/usr/lib/xfce4 \
+    --localstatedir=/var \
+    --sysconfdir=/etc \
+    --disable-debug \
+    --disable-static \
+    --enable-maintainer-mode \
+    --enable-polkit \
+    --enable-panel-plugins \
+    --disable-network-manager
   make
 }
 

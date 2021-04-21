@@ -3,7 +3,16 @@
 # shellcheck source=container/scripts/common.sh
 source "${CONTAINER_BASE}/scripts/common.sh"
 
-{
+function startxfce4() {
+    mv -fv ~/.xsession-errors ~/.xsession-errors.old
+    exec "$(command -v startxfce4)" 2>~/.xsession-errors
+}
+
+function dbg() {
+    echo "${@}" >&2
+}
+
+function bind_to_workdir() {
     # if the user has mounted their workdir in the container, then
     # make sure we are pulling it from the working copy
     if [ -d "${CONTAINER_BASE}/workdir" ]; then
@@ -22,19 +31,25 @@ source "${CONTAINER_BASE}/scripts/common.sh"
         ' _ '{}' \;
         echo
     fi
-    # install xfce
-    runuser -- "${PACMAN}" -Syu "xfce-test" --needed --noconfirm
-} 2>&1 | less -E
+}
 
-# start xfce?
 if ((${#@})); then
-    echo Running user supplied program...
-    exec "${@}"
-elif [ -t 0 ]; then
-    echo starting interactive session...
-    exec "${SHELL:-/bin/sh}"
+    dbg 'running user supplied program...'
+    exec "${SHELL:-/bin/sh}" -c "${@}"
 else
-    echo starting xfce4 session...
-    mv ~/.xsession-errors ~/.xsession-errors.old
-    exec startxfce4 > ~/.xsession-errors 2>&1
+    # check if dev workdir is available
+    bind_to_workdir 2>&1 | less -E -R -Q --tilde
+
+    if [[ -t 0 && -t 1 ]]; then
+        dbg 'starting interactive session...'
+        dbg 'note: starting xfce in the background will cause it to become suspended'
+        dbg 'recommend for you to run:
+            "docker exec -dt <container-name> startxfce4"
+            in a new terminal'
+        exec "${SHELL:-/bin/sh}"
+    # start xfce?
+    elif [ -n "$DISPLAY" ]; then
+        dbg 'starting xfce4 session...'
+        exec startxfce4
+    fi
 fi

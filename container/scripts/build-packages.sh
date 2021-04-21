@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash -ex
+set -o pipefail
 
 # shellcheck source=container/scripts/common.sh
 source "${CONTAINER_BASE}/scripts/common.sh"
@@ -7,7 +8,11 @@ cd "${XFCE_WORK_DIR}"
 
 LOGDEST="${LOGDEST:-/tmp/makelogs}"
 
-echo -en "\nLog output will be written to: $LOGDEST\n"
+if [ -n "${ACTIONS_CI}" ]; then
+    echo -en "\n::set-output name=build_logs::$LOGDEST\n"
+else
+    echo -en "\nLog output will be written to: $LOGDEST\n"
+fi
 
 runuser -- env LC_ALL=C LOGDEST="$LOGDEST" aur build \
     --ignorearch \
@@ -24,10 +29,5 @@ runuser -- env LC_ALL=C LOGDEST="$LOGDEST" aur build \
             /^.+: (\S+).+\n.+: \1.+$/M{P;z;h}
         }'
 
-# remove the group
-runuser -- "${PACMAN}" -R 'xfce-test' --noconfirm
-
-# shellcheck disable=SC2016
-runuser -- aur repo --list | cut -s --fields=1 | xargs -I {} bash -c '
-    cat "${LOGDEST}"/{}*{prepare,build,package}.log | gzip > "${LOGDEST}"/{}-log.gz'
-find "${LOGDEST}" -maxdepth 1 -name '*.gz'
+# install the group
+runuser -- "${PACMAN}" -Syu 'xfce-test' --noconfirm --needed

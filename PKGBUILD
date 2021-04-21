@@ -8,7 +8,7 @@ arch=(any)
 url='https://github.com/xfce-test/container-archlinux'
 license=(GPLv3)
 groups=(xfce-test)
-depends=(jq docker x11docker)
+depends=(jq docker x11docker fuse-overlayfs catatonit)
 makedepends=()
 optdepends=(
   'kittypack: for downloading package dependencies from arch main repos'

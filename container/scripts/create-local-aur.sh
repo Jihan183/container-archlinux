@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 # shellcheck source=container/scripts/common.sh
 source "${CONTAINER_BASE}/scripts/common.sh"

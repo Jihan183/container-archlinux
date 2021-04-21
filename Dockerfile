@@ -72,7 +72,7 @@ ARG CFLAGS
 ARG CPPFLAGS
 ENV CFLAGS="${CFLAGS}"
 
-# build all packages
+# build and install all packages
 COPY --chown="${USER_ID}" container/scripts/build-packages.sh "${CONTAINER_BASE}/scripts/"
 RUN ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages
 RUN scripts/build-packages.sh
@@ -85,9 +85,6 @@ RUN scripts/build-packages.sh
 
 # RUN /container_scripts/build_time/create_automate_langs.sh
 
-# Group all repos here
-# RUN install -dm755 --owner=${USER_NAME} /git
-
 # Rather use my patched version
 # TODO: Create an AUR package for ldtp2
 # RUN cd git \
@@ -95,8 +92,8 @@ RUN scripts/build-packages.sh
 #  && cd ldtp2 \
 #  && sudo pip3 install -e .
 
-# clean the install cache
-# RUN runuser -u ${USER_NAME} -- ${PACMAN} -Sc --noconfirm
+# setup machine-id
+# RUN systemd-machine-id-setup --print
 
 # COPY behave /behave_tests
 
@@ -123,4 +120,4 @@ USER "${USER_NAME}"
 WORKDIR "${USER_HOME}"
 
 COPY --chown="${USER_ID}" container/scripts/entrypoint.sh "${CONTAINER_BASE}/scripts/"
-ENTRYPOINT "${CONTAINER_BASE}/scripts/entrypoint.sh"
+ENTRYPOINT [ "${CONTAINER_BASE}/scripts/entrypoint.sh" ]

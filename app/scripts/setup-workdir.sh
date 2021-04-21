@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 # shellcheck source=app/scripts/vars.sh
 source "$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")/vars.sh"
