@@ -40,6 +40,9 @@ function bind_to_workdir() {
     fi
 }
 
+# setup machine-id
+sudo systemd-machine-id-setup --print
+
 if ((${#@})); then
     dbg 'running user supplied program...'
     exec "${SHELL:-/bin/sh}" -c "${@}"

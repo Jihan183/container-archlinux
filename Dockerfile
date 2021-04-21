@@ -57,9 +57,6 @@ RUN scripts/pkg-utils.sh
 RUN runuser -u "${USER}" -- "${PACMAN}" -Syu \
     man xorg-xrandr nano --noconfirm --needed
 
-# setup machine-id
-RUN systemd-machine-id-setup --print
-
 ENV XFCE_WORK_DIR="${CONTAINER_BASE}/git"
 COPY --chown="${USER_ID}" xfce/repo "${XFCE_WORK_DIR}"
 RUN chmod -R g+ws "${XFCE_WORK_DIR}"
@@ -115,6 +112,9 @@ RUN scripts/build-packages.sh
 # RUN install -dm755 --owner=${USER_NAME} "${USER_HOME}/Desktop"
 
 # RUN ln --symbolic /data "${USER_HOME}/Desktop/data"
+
+# setup machine-id
+RUN touch /etc/machine-id
 
 COPY --chown="${USER_ID}" container/scripts/user-configs.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/user-configs.sh
