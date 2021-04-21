@@ -22,5 +22,4 @@ x11docker --debug --desktop \
     -- \
     ${LOCAL_XFCE:+--volume "$LOCAL_XFCE:/container/xfce/workdir:ro"} \
     -- \
-    schuellerf/xfce-test:latest
-    # xfce-test/xfce-test-archlinux:dev
+    xfce-test/xfce-test-archlinux:dev

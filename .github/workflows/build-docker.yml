@@ -74,11 +74,15 @@ jobs:
         run: |
           mkdir --parents build
           podman create --name xfce-test ${{ steps.build-image.outputs.image }}
+
+          buildah unshare -- bash --norc --noprofile -- <<'EOF'
           export mnt="$(buildah mount xfce-test)"
           xargs --max-args=1 bash -c '
             cat "${mnt}/$BUILD_LOGS/$1"*{prepare,build,package}.log | gzip > build/"$1"-log.gz
           ' - < container/pkglist.txt
           buildah unmount xfce-test
+          EOF
+
           find build -maxdepth 1 -name '*.gz'
         env:
           BUILD_LOGS: ${{ steps.build-image.outputs.build_logs }}

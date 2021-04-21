@@ -3,9 +3,12 @@
 # shellcheck source=container/scripts/common.sh
 source "${CONTAINER_BASE}/scripts/common.sh"
 
-function startxfce4() {
+function start_xfce() {
+    # disable power manager display management
+    xfconf-query --channel xfce4-power-manager \
+        --create --property /xfce4-power-manager/dpms-enabled --type 'bool' --set 'false'
     mv -fv ~/.xsession-errors ~/.xsession-errors.old
-    exec "$(command -v startxfce4)" 2>~/.xsession-errors
+    exec startxfce4 2>~/.xsession-errors
 }
 
 function dbg() {
@@ -36,20 +39,20 @@ function bind_to_workdir() {
 if ((${#@})); then
     dbg 'running user supplied program...'
     exec "${SHELL:-/bin/sh}" -c "${@}"
-else
-    # check if dev workdir is available
-    bind_to_workdir 2>&1 | less -E -R -Q --tilde
+fi
 
-    if [[ -t 0 && -t 1 ]]; then
-        dbg 'starting interactive session...'
-        dbg 'note: starting xfce in the background will cause it to become suspended'
-        dbg 'recommend for you to run:
+# check if dev workdir is available
+bind_to_workdir 2>&1 | less -E -R -Q --tilde
+
+if [[ -t 0 && -t 1 ]]; then
+    dbg 'starting interactive session...'
+    dbg 'note: starting xfce in the background will cause it to become suspended'
+    dbg 'recommend for you to run:
             "docker exec -dt <container-name> startxfce4"
             in a new terminal'
-        exec "${SHELL:-/bin/sh}"
-    # start xfce?
-    elif [ -n "$DISPLAY" ]; then
-        dbg 'starting xfce4 session...'
-        exec startxfce4
-    fi
+    exec "${SHELL:-/bin/sh}"
+# start xfce?
+elif [ -n "$DISPLAY" ]; then
+    dbg 'starting xfce4 session...'
+    start_xfce
 fi
