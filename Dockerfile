@@ -53,11 +53,13 @@ ENV PACMAN="${PACMAN_HELPER}"
 COPY --chown="${USER_ID}" container/scripts/pkg-utils.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/pkg-utils.sh
 
-# install more packages required for the next few steps
-# RUN runuser -u ${USER_NAME} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed
+# install other packages which will be required
+RUN runuser -u "${USER}" -- "${PACMAN}" -Syu \
+    man xorg-xrandr nano --noconfirm --needed
 
-# needed for LDTP and friends
-# RUN /usr/bin/dbus-run-session /usr/bin/gsettings set org.gnome.desktop.interface toolkit-accessibility true
+# setup machine-id
+RUN systemd-machine-id-setup --print
+
 ENV XFCE_WORK_DIR="${CONTAINER_BASE}/git"
 COPY --chown="${USER_ID}" xfce/repo "${XFCE_WORK_DIR}"
 RUN chmod -R g+ws "${XFCE_WORK_DIR}"
@@ -77,6 +79,12 @@ COPY --chown="${USER_ID}" container/scripts/build-packages.sh "${CONTAINER_BASE}
 RUN ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages
 RUN scripts/build-packages.sh
 
+# install more packages required for the next few steps
+# RUN runuser -u ${USER_NAME} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed
+
+# needed for LDTP and friends
+# RUN /usr/bin/dbus-run-session /usr/bin/gsettings set org.gnome.desktop.interface toolkit-accessibility true
+
 # Install _all_ languages for testing
 # RUN ${PACMAN} -Syu --noconfirm \
 #  && ${PACMAN} -S transifex-client xautomation intltool \
@@ -91,9 +99,6 @@ RUN scripts/build-packages.sh
 #  && git clone -b python3 https://github.com/schuellerf/ldtp2.git \
 #  && cd ldtp2 \
 #  && sudo pip3 install -e .
-
-# setup machine-id
-# RUN systemd-machine-id-setup --print
 
 # COPY behave /behave_tests
 

@@ -12,8 +12,9 @@ x11docker --debug --desktop \
     --network=private \
     --init=dockerinit \
     --xephyr \
+    "$(command -v podman 2>&1 > /dev/null && echo "--podman")" \
     --user=RETAIN \
-    --name xfce-test \
+    --name xfce-test-x11 \
     --pull=ask \
     --showenv \
     --showid \
@@ -22,4 +23,5 @@ x11docker --debug --desktop \
     -- \
     ${LOCAL_XFCE:+--volume "$LOCAL_XFCE:/container/xfce/workdir:ro"} \
     -- \
-    xfce-test/xfce-test-archlinux:dev
+    x11docker/xfce:latest
+    # xfce-test/xfce-test-archlinux:dev

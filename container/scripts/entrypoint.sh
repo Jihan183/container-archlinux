@@ -4,11 +4,15 @@
 source "${CONTAINER_BASE}/scripts/common.sh"
 
 function start_xfce() {
+    startxfce4 2>~/.xsession-errors & disown
     # disable power manager display management
     xfconf-query --channel xfce4-power-manager \
         --create --property /xfce4-power-manager/dpms-enabled --type 'bool' --set 'false'
-    mv -fv ~/.xsession-errors ~/.xsession-errors.old
-    exec startxfce4 2>~/.xsession-errors
+    # disable screensaver
+    xfconf-query --channel xfce4-screensaver \
+        --create --property /xfce4-screensaver/lock/enabled --type 'bool' --set 'false'
+    xfconf-query --channel xfce4-screensaver \
+        --create --property /xfce4-screensaver/saver/enabled --type 'bool' --set 'false'
 }
 
 function dbg() {

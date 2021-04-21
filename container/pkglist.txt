@@ -7,8 +7,8 @@ exo
 xfce4-panel
 thunar
 thunar-volman
-xfce4-power-manager
 xfce4-settings
+xfce4-power-manager
 xfce4-session
 xfdesktop
 xfwm4
