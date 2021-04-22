@@ -75,8 +75,7 @@ jobs:
         id: extract-logs
         run: |
           mkdir --parents build
-          podman create --name xfce-test \
-            ${{ steps.build-image.outputs.image }}:"$(awk '{print $1}' <<< "${{ steps.build-image.outputs.tags }}")"
+          podman create --name xfce-test "$BUILD_IMAGE:$(awk '{print $1}' <<< "$BUILD_TAGS")"
 
           buildah unshare -- bash --norc --noprofile -- <<'EOF'
           export mnt="$(buildah mount xfce-test)"
@@ -85,10 +84,10 @@ jobs:
           ' - < container/pkglist.txt
           buildah unmount xfce-test
           EOF
-
-          find build -maxdepth 1 -name '*.gz'
         env:
           BUILD_LOGS: ${{ steps.build-image.outputs.build_logs }}
+          BUILD_TAGS: ${{ steps.build-image.outputs.tags }}
+          BUILD_IMAGE: ${{ steps.build-image.outputs.image }}
 
       - name: Push Image to Github Registry
         if: steps.build-image.outcome == 'success'

@@ -1,4 +1,4 @@
-FROM archlinux:latest
+FROM archlinux:latest AS stage0
 LABEL org.opencontainers.image.authors="noblechuk5[at]web[dot]de"
 LABEL org.opencontainers.image.title="xfce-test-archlinux"
 LABEL org.opencontainers.image.description="ArchLinux environment for hacking on xfce-test"
@@ -72,6 +72,9 @@ COPY --chown="${USER_ID}" container/scripts/build-packages.sh "${CONTAINER_BASE}
 RUN ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages
 RUN scripts/build-packages.sh
 
+# setup machine-id
+RUN touch /etc/machine-id
+
 # install more packages required for the next few steps
 # RUN runuser -u ${USER_NAME} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed
 
@@ -109,12 +112,14 @@ RUN scripts/build-packages.sh
 
 # RUN ln --symbolic /data "${USER_HOME}/Desktop/data"
 
-# setup machine-id
-RUN touch /etc/machine-id
-
 COPY container/etc/X11/xinit /etc/X11/xinit/
+COPY container/etc/xdg/xfce4 /etc/xdg/xfce4/
 COPY --chown="${USER_ID}" container/scripts/user-configs.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/user-configs.sh
+
+FROM archlinux:latest
+
+COPY --from=stage0 / /
 
 # switch to the test-user
 USER "${USER_NAME}"

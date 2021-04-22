@@ -6,7 +6,8 @@ fi
 
 # x11docker params
 x11docker_args=(
-    --debug
+    # --debug
+    --interactive
     --desktop
     --dbus
     --clipboard
@@ -36,7 +37,7 @@ docker_podman_arg=(
 
 # image/container args
 image_cont_args=(
-    xfce-test/xfce-test-archlinux:fix
+    xfce-test/xfce-test-archlinux:devel
 )
 
 x11docker "${x11docker_args[@]}" \

@@ -28,24 +28,21 @@ function bind_to_workdir() {
     fi
 }
 
-# # setup machine-id. Do we need this?
-# sudo systemd-machine-id-setup --print
-
 if ((${#@})); then
     dbg 'running user supplied program...'
     exec "${SHELL:-/bin/sh}" -c "${@}"
 fi
 
 # check if dev workdir is available
-bind_to_workdir 2>&1 | less -E -R -Q --tilde
+bind_to_workdir 2>&1 | less +F -E -R -Q --tilde
 
 if [[ -t 0 && -t 1 ]]; then
+    # --interactive --tty
     dbg 'starting interactive session...'
-    dbg 'note: starting xfce in the background will cause it to become suspended'
-    dbg 'recommend that you run: "startx" in a new terminal'
+    /bin/bash -c 'startxfce4' 2> ~/.xsession-errors >/dev/null & disown
     exec "${SHELL:-/bin/sh}"
 # start xfce?
 elif [ -n "$DISPLAY" ]; then
     dbg 'starting xfce4 session...'
-    exec startxfce4 2>~/.xsession-errors
+    exec startxfce4 2> ~/.xsession-errors >/dev/null
 fi
