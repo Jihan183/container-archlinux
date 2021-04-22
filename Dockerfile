@@ -1,9 +1,3 @@
-FROM archlinux:latest
-LABEL org.opencontainers.image.authors="noblechuk5[at]web[dot]de"
-LABEL org.opencontainers.image.title="xfce-test-archlinux"
-LABEL org.opencontainers.image.description="ArchLinux environment for hacking on xfce-test"
-LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-archlinux"
-
 ARG TRAVIS_CI
 ARG ACTIONS_CI
 ARG USER_SHELL
@@ -15,6 +9,12 @@ ARG DOWNLOAD_DATE
 ARG MAIN_BRANCH
 ARG CFLAGS
 ARG CPPFLAGS
+
+FROM archlinux:latest AS base
+LABEL org.opencontainers.image.authors="noblechuk5[at]web[dot]de"
+LABEL org.opencontainers.image.title="xfce-test-archlinux"
+LABEL org.opencontainers.image.description="ArchLinux environment for hacking on xfce-test"
+LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-archlinux"
 
 ENV CONTAINER_BASE="${CONTAINER_BASE}"
 ENV USER="${USER_NAME}"
@@ -51,27 +51,29 @@ COPY --chown="${USER_ID}" container/etc/pacman.conf.in ${CONTAINER_BASE}/etc/
 COPY --chown="${USER_ID}" container/pkglist.txt ${CONTAINER_BASE}/
 RUN scripts/create-user.sh
 
+FROM base AS stage0
 # setup aur and install pacman helper
 RUN install -dm755 --owner="${USER}" ${BUILDDIR} && \
     scripts/create-local-aur.sh && \
     scripts/pkg-utils.sh
 
+FROM stage0 AS stage1
 # build and install all xfce packages
 COPY --chown="${USER_ID}" container/scripts/build-packages.sh "${CONTAINER_BASE}/scripts/"
 RUN chmod -R g+ws "${XFCE_WORK_DIR}" && \
     ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages && \
     build-packages
 
+FROM stage1 as stage2
 # setup some useful runtime defaults for the user
 COPY container/etc/X11/ /etc/X11/
 COPY container/etc/xdg/ /etc/xdg/
 RUN scripts/runtime.sh
 
+FROM stage2
 # switch to the test-user
 USER "${USER}"
-
 WORKDIR "${USER_HOME}"
-
 ENTRYPOINT [ "/bin/bash", "-c", "${CONTAINER_BASE}/scripts/entrypoint.sh ${@}", "--" ]
 
 # install more packages required for the next few steps
