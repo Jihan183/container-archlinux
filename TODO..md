@@ -8,4 +8,4 @@
 - Create a graphical interface for this tool so that end-users don't have to worry about running scripts
 - <s>Ensure all args have a default either through the `.env` file or in the Dockerfile</s>
 - The command to install packages `runuser -- "${PACMAN}"` is used a lot, can we make a function in common.sh that wraps this call?
-- Slim down this fat boy. The image is quite large. Can we shrink it down to 2GB atleast? 1GB or less would be ideal.
+- Slim down this fat boy. The image is quite large. Can we shrink it down to 1GB atleast? 600MB or less would be ideal.

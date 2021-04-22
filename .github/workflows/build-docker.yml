@@ -69,6 +69,7 @@ jobs:
             CPPFLAGS=${{ env.CPPFLAGS }}
           extra-args: |
             --timestamp ${{ env.TIMESTAMP }}
+            --squash
         timeout-minutes: 50
 
       - name: Copy build logs

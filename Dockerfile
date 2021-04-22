@@ -1,4 +1,4 @@
-FROM archlinux:latest AS stage0
+FROM archlinux:latest
 LABEL org.opencontainers.image.authors="noblechuk5[at]web[dot]de"
 LABEL org.opencontainers.image.title="xfce-test-archlinux"
 LABEL org.opencontainers.image.description="ArchLinux environment for hacking on xfce-test"
@@ -6,77 +6,76 @@ LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-
 
 ARG TRAVIS_CI
 ARG ACTIONS_CI
-
 ARG USER_SHELL
-ENV USER_SHELL="${USER_SHELL}"
+ARG CONTAINER_BASE
+ARG USER_NAME
+ARG PACMAN_HELPER
+ARG PACMAN_HELPER_URL
+ARG DOWNLOAD_DATE
+ARG MAIN_BRANCH
+ARG CFLAGS
+ARG CPPFLAGS
+
+ENV CONTAINER_BASE="${CONTAINER_BASE}"
+ENV USER="${USER_NAME}"
+ENV USER_ID=100
+ENV USER_HOME="/home/${USER}"
+ENV PACKAGER="${USER_NAME} <xfce4-dev@xfce.org>"
+ENV BUILDDIR=/var/cache/makepkg-build/
+ENV PACMAN_HELPER="${PACMAN_HELPER}"
+ENV PACMAN_HELPER_URL="${PACMAN_HELPER_URL:-https://aur.archlinux.org/${PACMAN_HELPER}.git}"
+ENV PACMAN="${PACMAN_HELPER}"
+ENV XFCE_WORK_DIR="${CONTAINER_BASE}/git/"
+ENV DOWNLOAD_DATE="${DOWNLOAD_DATE}"
+ENV MAIN_BRANCH="${MAIN_BRANCH}"
+ENV CFLAGS="${CFLAGS}"
 
 # identify who is running this build
-RUN id
-
-# base packages
-RUN pacman -Syu base-devel git ${USER_SHELL} --noconfirm --needed
-
-ARG CONTAINER_BASE
-ENV CONTAINER_BASE="${CONTAINER_BASE}"
+RUN id && \
+    pacman -Syu base-devel git ${USER_SHELL} --noconfirm --needed
 
 WORKDIR "${CONTAINER_BASE}"
 
-# Setup the test user
-ARG USER_NAME
-ENV USER_NAME="${USER_NAME}"
-ENV USER="${USER_NAME}"
-ENV USER_ID=100
-ENV USER_HOME="/home/${USER_NAME}"
-
-COPY --chown="${USER_ID}" container/scripts/common.sh "${CONTAINER_BASE}/scripts/"
-COPY --chown="${USER_ID}" container/etc "${CONTAINER_BASE}/etc"
-COPY --chown="${USER_ID}" container/pkglist.txt "${CONTAINER_BASE}/pkglist.txt"
-
-COPY --chown="${USER_ID}" container/scripts/create-user.sh "${CONTAINER_BASE}/scripts/"
+# copy in some useful file and setup a test user
+COPY --chown="${USER_ID}" \
+    container/scripts/common.sh \
+    container/scripts/create-local-aur.sh \
+    container/scripts/create-user.sh \
+    container/scripts/entrypoint.sh \
+    container/scripts/pkg-utils.sh \
+    container/scripts/runtime.sh \
+    ${CONTAINER_BASE}/scripts/
+COPY --chown="${USER_ID}" xfce/repo "${XFCE_WORK_DIR}"
+COPY --chown="${USER_ID}" container/etc/sudoers.d ${CONTAINER_BASE}/etc/sudoers.d/
+COPY --chown="${USER_ID}" container/etc/pacman.conf.in ${CONTAINER_BASE}/etc/
+COPY --chown="${USER_ID}" container/pkglist.txt ${CONTAINER_BASE}/
 RUN scripts/create-user.sh
 
-# for makepkg
-ENV PACKAGER="${USER_NAME} <xfce4-dev@xfce.org>"
-ENV BUILDDIR=/var/cache/makepkg-build/
-RUN install -dm755 --owner="${USER_NAME}" ${BUILDDIR}
+# setup aur and install pacman helper
+RUN install -dm755 --owner="${USER}" ${BUILDDIR} && \
+    scripts/create-local-aur.sh && \
+    scripts/pkg-utils.sh
 
-# install the local AUR database for hosting xfce packages
-COPY --chown="${USER_ID}" container/scripts/create-local-aur.sh "${CONTAINER_BASE}/scripts/"
-RUN scripts/create-local-aur.sh
-
-# build pacman helper
-ARG PACMAN_HELPER
-ENV PACMAN_HELPER="${PACMAN_HELPER}"
-ARG PACMAN_HELPER_URL
-ENV PACMAN_HELPER_URL="${PACMAN_HELPER_URL:-https://aur.archlinux.org/${PACMAN_HELPER}.git}"
-ENV PACMAN="${PACMAN_HELPER}"
-COPY --chown="${USER_ID}" container/scripts/pkg-utils.sh "${CONTAINER_BASE}/scripts/"
-RUN scripts/pkg-utils.sh
-
-ENV XFCE_WORK_DIR="${CONTAINER_BASE}/git"
-COPY --chown="${USER_ID}" xfce/repo "${XFCE_WORK_DIR}"
-RUN chmod -R g+ws "${XFCE_WORK_DIR}"
-
-# line used to invalidate all git clones
-ARG DOWNLOAD_DATE
-ENV DOWNLOAD_DATE="${DOWNLOAD_DATE}"
-ARG MAIN_BRANCH
-ENV MAIN_BRANCH="${MAIN_BRANCH}"
-# useful for affecting compilation
-ARG CFLAGS
-ARG CPPFLAGS
-ENV CFLAGS="${CFLAGS}"
-
-# build and install all packages
+# build and install all xfce packages
 COPY --chown="${USER_ID}" container/scripts/build-packages.sh "${CONTAINER_BASE}/scripts/"
-RUN ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages
-RUN scripts/build-packages.sh
+RUN chmod -R g+ws "${XFCE_WORK_DIR}" && \
+    ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages && \
+    build-packages
 
-# setup machine-id
-RUN touch /etc/machine-id
+# setup some useful runtime defaults for the user
+COPY container/etc/X11/ /etc/X11/
+COPY container/etc/xdg/ /etc/xdg/
+RUN scripts/runtime.sh
+
+# switch to the test-user
+USER "${USER}"
+
+WORKDIR "${USER_HOME}"
+
+ENTRYPOINT [ "/bin/bash", "-c", "${CONTAINER_BASE}/scripts/entrypoint.sh ${@}", "--" ]
 
 # install more packages required for the next few steps
-# RUN runuser -u ${USER_NAME} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed
+# RUN runuser -u ${USER} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed
 
 # needed for LDTP and friends
 # RUN /usr/bin/dbus-run-session /usr/bin/gsettings set org.gnome.desktop.interface toolkit-accessibility true
@@ -100,31 +99,10 @@ RUN touch /etc/machine-id
 
 # RUN mkdir /data
 
-# COPY xfce-test /usr/bin/
+# COPY --chown=${USER} .tmuxinator "${USER_HOME}/.tmuxinator"
 
-# RUN chmod a+x /usr/bin/xfce-test && ln -s /usr/bin/xfce-test /xfce-test
+# COPY --chown=${USER} extra_files/mimeapps.list "${USER_HOME}/.config/"
 
-# COPY --chown=${USER_NAME} .tmuxinator "${USER_HOME}/.tmuxinator"
-
-# COPY --chown=${USER_NAME} extra_files/mimeapps.list "${USER_HOME}/.config/"
-
-# RUN install -dm755 --owner=${USER_NAME} "${USER_HOME}/Desktop"
+# RUN install -dm755 --owner=${USER} "${USER_HOME}/Desktop"
 
 # RUN ln --symbolic /data "${USER_HOME}/Desktop/data"
-
-COPY container/etc/X11/xinit /etc/X11/xinit/
-COPY container/etc/xdg/xfce4 /etc/xdg/xfce4/
-COPY --chown="${USER_ID}" container/scripts/user-configs.sh "${CONTAINER_BASE}/scripts/"
-RUN scripts/user-configs.sh
-
-FROM archlinux:latest
-
-COPY --from=stage0 / /
-
-# switch to the test-user
-USER "${USER_NAME}"
-
-WORKDIR "${USER_HOME}"
-
-COPY --chown="${USER_ID}" container/scripts/entrypoint.sh "${CONTAINER_BASE}/scripts/"
-ENTRYPOINT [ "/bin/bash", "-c", "${CONTAINER_BASE}/scripts/entrypoint.sh ${@}", "--" ]

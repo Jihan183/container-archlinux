@@ -2,10 +2,10 @@ xfce4-dev-tools
 libxfce4util
 xfconf
 libxfce4ui
-garcon
 exo
-xfce4-panel
+garcon
 thunar
+xfce4-panel
 thunar-volman
 xfce4-settings
 xfce4-power-manager
