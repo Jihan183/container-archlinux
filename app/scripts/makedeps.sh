@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # shellcheck source=app/scripts/vars.sh
 source "$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")/vars.sh"
@@ -72,6 +72,7 @@ function update_packages() {
             sed -i -E "s/(^depends)=\(.*\)/\1=(${DEPS[*]@Q})/" "xfce/repo/${pp}/PKGBUILD"
             fail=$((fail + ${?##-}))
         fi
+
         if ((${#MAKE_DEPS[@]})); then
             sed -i -E "s/(^makedepends)=\(.*\)/\1=(${MAKE_DEPS[*]@Q})/" "xfce/repo/${pp}/PKGBUILD"
             fail=$((fail + ${?##-}))

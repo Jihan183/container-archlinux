@@ -19,7 +19,7 @@ LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-
 ENV CONTAINER_BASE="${CONTAINER_BASE}"
 ENV USER="${USER_NAME}"
 ENV USER_ID=100
-ENV USER_HOME="/home/${USER}"
+ENV USER_HOME="/home/${USER}/"
 ENV PACKAGER="${USER_NAME} <xfce4-dev@xfce.org>"
 ENV BUILDDIR=/var/cache/makepkg-build/
 ENV PACMAN_HELPER="${PACMAN_HELPER}"
@@ -29,6 +29,7 @@ ENV XFCE_WORK_DIR="${CONTAINER_BASE}/git/"
 ENV DOWNLOAD_DATE="${DOWNLOAD_DATE}"
 ENV MAIN_BRANCH="${MAIN_BRANCH}"
 ENV CFLAGS="${CFLAGS}"
+ENV CPPFLAGS="${CPPFLAGS}"
 
 # identify who is running this build
 RUN id && \
@@ -49,7 +50,7 @@ COPY --chown="${USER_ID}" xfce/repo "${XFCE_WORK_DIR}"
 COPY --chown="${USER_ID}" container/etc/sudoers.d ${CONTAINER_BASE}/etc/sudoers.d/
 COPY --chown="${USER_ID}" container/etc/pacman.conf.in ${CONTAINER_BASE}/etc/
 COPY --chown="${USER_ID}" container/pkglist.txt ${CONTAINER_BASE}/
-RUN scripts/create-user.sh
+RUN echo "user=${USER}; user=${USER_NAME}" && scripts/create-user.sh
 
 FROM base AS stage0
 # setup aur and install pacman helper
