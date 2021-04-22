@@ -1,3 +1,9 @@
+FROM archlinux:latest AS base
+LABEL org.opencontainers.image.authors="noblechuk5[at]web[dot]de"
+LABEL org.opencontainers.image.title="xfce-test-archlinux"
+LABEL org.opencontainers.image.description="ArchLinux environment for hacking on xfce-test"
+LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-archlinux"
+
 ARG TRAVIS_CI
 ARG ACTIONS_CI
 ARG USER_SHELL
@@ -10,13 +16,11 @@ ARG MAIN_BRANCH
 ARG CFLAGS
 ARG CPPFLAGS
 
-FROM archlinux:latest AS base
-LABEL org.opencontainers.image.authors="noblechuk5[at]web[dot]de"
-LABEL org.opencontainers.image.title="xfce-test-archlinux"
-LABEL org.opencontainers.image.description="ArchLinux environment for hacking on xfce-test"
-LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-archlinux"
-
+# https://github.com/containers/buildah/issues/1503
+ENV TRAVIS_CI="${TRAVIS_CI}"
+ENV ACTIONS_CI="${ACTIONS_CI}"
 ENV CONTAINER_BASE="${CONTAINER_BASE}"
+ENV USER_NAME="${USER_NAME}"
 ENV USER="${USER_NAME}"
 ENV USER_ID=100
 ENV USER_HOME="/home/${USER}/"
@@ -50,7 +54,7 @@ COPY --chown="${USER_ID}" xfce/repo "${XFCE_WORK_DIR}"
 COPY --chown="${USER_ID}" container/etc/sudoers.d ${CONTAINER_BASE}/etc/sudoers.d/
 COPY --chown="${USER_ID}" container/etc/pacman.conf.in ${CONTAINER_BASE}/etc/
 COPY --chown="${USER_ID}" container/pkglist.txt ${CONTAINER_BASE}/
-RUN echo "user=${USER}; user=${USER_NAME}" && scripts/create-user.sh
+RUN scripts/create-user.sh
 
 FROM base AS stage0
 # setup aur and install pacman helper
