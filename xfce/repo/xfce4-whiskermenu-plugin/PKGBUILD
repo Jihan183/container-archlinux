@@ -38,8 +38,7 @@ build() {
   cd "$pkgname"
   cmake -B build \
     -DCMAKE_BUILD_TYPE='None' \
-    -DCMAKE_INSTALL_PREFIX=/usr\
-    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib \
     -DCMAKE_INSTALL_LIBEXECDIR=lib/xfce4
   make -C build
 }

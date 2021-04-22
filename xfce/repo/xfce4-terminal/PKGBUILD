@@ -41,11 +41,11 @@ build() {
   ./autogen.sh \
     --prefix=/usr/ \
     --sbindir=/usr/bin \
-    --libexecdir=/usr/lib/xfce4  \
+    --libexecdir=/usr/lib/xfce4 \
     --localstatedir=/var \
     --sysconfdir=/etc \
-    --disable-debug  \
-    --disable-static  \
+    --disable-debug \
+    --disable-static \
     --enable-maintainer-mode \
     --enable-gtk-doc
   make

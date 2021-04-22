@@ -36,7 +36,7 @@ prepare() {
 
 build() {
   cd "$pkgname"
-  ./autogen.sh  \
+  ./autogen.sh \
     --disable-static \
     --prefix=/usr \
     --sysconfdir=/etc \

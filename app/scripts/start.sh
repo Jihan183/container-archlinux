@@ -6,6 +6,7 @@ fi
 
 # x11docker params
 x11docker_args=(
+    --interactive
     --debug --desktop
     --clipboard
     --size 1280x720
@@ -34,7 +35,7 @@ docker_podman_arg=(
 
 # image/container args
 image_cont_args=(
-    xfce-test/xfce-test-archlinux:latest
+    xfce-test/xfce-test-archlinux:devel
 )
 
 x11docker "${x11docker_args[@]}" -- "${docker_podman_arg[@]}" -- "${image_cont_args[@]}"

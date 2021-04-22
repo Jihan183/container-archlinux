@@ -8,6 +8,6 @@ runuser -- ln -s "${CONTAINER_BASE}" "${USER_HOME}/container"
 
 # zsh is too barebones initially, let's fix that
 if [ "${USER_SHELL,,}" = 'zsh' ]; then
-        runuser -- "${PACMAN}" -Syu oh-my-zsh-git --needed --noconfirm
+        runuser -- "${PACMAN}" -Syu oh-my-zsh-git xclip --needed --noconfirm
         install -Dm644 --owner="${USER_NAME}" /usr/share/oh-my-zsh/zshrc "${USER_HOME}/.zshrc"
 fi

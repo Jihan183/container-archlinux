@@ -116,6 +116,7 @@ RUN scripts/build-packages.sh
 # setup machine-id
 RUN touch /etc/machine-id
 
+COPY container/etc/X11/xinit /etc/xinit/
 COPY --chown="${USER_ID}" container/scripts/user-configs.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/user-configs.sh
 
@@ -125,4 +126,5 @@ USER "${USER_NAME}"
 WORKDIR "${USER_HOME}"
 
 COPY --chown="${USER_ID}" container/scripts/entrypoint.sh "${CONTAINER_BASE}/scripts/"
-ENTRYPOINT [ "${CONTAINER_BASE}/scripts/entrypoint.sh" ]
+ENTRYPOINT [ "/bin/bash", "--no-profile", "--no-rc", "${CONTAINER_BASE}/scripts/entrypoint.sh" ]
+CMD ["startx"]

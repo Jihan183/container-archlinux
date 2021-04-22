@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# start some nice programs
+
+if [ -d /etc/X11/xinit/xinitrc.d ]; then
+    for f in /etc/X11/xinit/xinitrc.d/?*.sh; do
+        # shellcheck disable=SC1090
+        [ -x "$f" ] && . "$f"
+    done
+    unset f
+fi
+
+# disable power manager display management
+xfconf-query --channel xfce4-power-manager \
+    --create --property /xfce4-power-manager/dpms-enabled --type 'bool' --set 'false'
+# disable screensaver
+xfconf-query --channel xfce4-screensaver \
+    --create --property /xfce4-screensaver/lock/enabled --type 'bool' --set 'false'
+xfconf-query --channel xfce4-screensaver \
+    --create --property /xfce4-screensaver/saver/enabled --type 'bool' --set 'false'
+
+exec startxfce4 2>~/.xsession-errors
