@@ -31,3 +31,7 @@ runuser -- env LC_ALL=C LOGDEST="$LOGDEST" aur build \
 
 # install the group
 runuser -- "${PACMAN}" -Syu 'xfce-test' --noconfirm --needed
+
+# install other applications needed for full functionality
+runuser -- "${PACMAN}" -Syu man xorg-xrandr xorg-xhost nano htop \
+    --noconfirm --needed

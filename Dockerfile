@@ -53,10 +53,6 @@ ENV PACMAN="${PACMAN_HELPER}"
 COPY --chown="${USER_ID}" container/scripts/pkg-utils.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/pkg-utils.sh
 
-# install other packages which will be required
-RUN runuser -u "${USER}" -- "${PACMAN}" -Syu \
-    man xorg-xrandr nano --noconfirm --needed
-
 ENV XFCE_WORK_DIR="${CONTAINER_BASE}/git"
 COPY --chown="${USER_ID}" xfce/repo "${XFCE_WORK_DIR}"
 RUN chmod -R g+ws "${XFCE_WORK_DIR}"
@@ -116,7 +112,7 @@ RUN scripts/build-packages.sh
 # setup machine-id
 RUN touch /etc/machine-id
 
-COPY container/etc/X11/xinit /etc/xinit/
+COPY container/etc/X11/xinit /etc/X11/xinit/
 COPY --chown="${USER_ID}" container/scripts/user-configs.sh "${CONTAINER_BASE}/scripts/"
 RUN scripts/user-configs.sh
 
@@ -126,5 +122,4 @@ USER "${USER_NAME}"
 WORKDIR "${USER_HOME}"
 
 COPY --chown="${USER_ID}" container/scripts/entrypoint.sh "${CONTAINER_BASE}/scripts/"
-ENTRYPOINT [ "/bin/bash", "--no-profile", "--no-rc", "${CONTAINER_BASE}/scripts/entrypoint.sh" ]
-CMD ["startx"]
+ENTRYPOINT [ "/bin/bash", "-c", "${CONTAINER_BASE}/scripts/entrypoint.sh ${@}", "--" ]

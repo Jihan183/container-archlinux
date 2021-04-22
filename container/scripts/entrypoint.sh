@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # shellcheck source=container/scripts/common.sh
 source "${CONTAINER_BASE}/scripts/common.sh"
 
@@ -27,7 +29,7 @@ function bind_to_workdir() {
 }
 
 # # setup machine-id. Do we need this?
-sudo systemd-machine-id-setup --print
+# sudo systemd-machine-id-setup --print
 
 if ((${#@})); then
     dbg 'running user supplied program...'
@@ -45,5 +47,5 @@ if [[ -t 0 && -t 1 ]]; then
 # start xfce?
 elif [ -n "$DISPLAY" ]; then
     dbg 'starting xfce4 session...'
-    exec startx
+    exec startxfce4 2>~/.xsession-errors
 fi

@@ -6,10 +6,11 @@ fi
 
 # x11docker params
 x11docker_args=(
-    --interactive
-    --debug --desktop
+    --debug
+    --desktop
+    --dbus
     --clipboard
-    --size 1280x720
+    --size=1280x720
     --cap-default
     --network=private
     --init=dockerinit
@@ -24,7 +25,7 @@ x11docker_args=(
     # --keepcache
 )
 
-if command -v foo >&2; then
+if type podman >&2; then
     x11docker_args+=(--podman)
 fi
 
@@ -35,7 +36,11 @@ docker_podman_arg=(
 
 # image/container args
 image_cont_args=(
-    xfce-test/xfce-test-archlinux:devel
+    xfce-test/xfce-test-archlinux:fix
 )
 
-x11docker "${x11docker_args[@]}" -- "${docker_podman_arg[@]}" -- "${image_cont_args[@]}"
+x11docker "${x11docker_args[@]}" \
+        -- \
+        "${docker_podman_arg[@]}" \
+        -- \
+        "${image_cont_args[@]}"
