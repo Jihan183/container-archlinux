@@ -17,10 +17,7 @@ ARG CFLAGS
 ARG CPPFLAGS
 
 # https://github.com/containers/buildah/issues/1503
-ENV TRAVIS_CI="${TRAVIS_CI}"
-ENV ACTIONS_CI="${ACTIONS_CI}"
 ENV CONTAINER_BASE="${CONTAINER_BASE}"
-ENV USER_NAME="${USER_NAME}"
 ENV USER="${USER_NAME}"
 ENV USER_ID=100
 ENV USER_HOME="/home/${USER}/"
@@ -56,26 +53,22 @@ COPY --chown="${USER_ID}" container/etc/pacman.conf.in ${CONTAINER_BASE}/etc/
 COPY --chown="${USER_ID}" container/pkglist.txt ${CONTAINER_BASE}/
 RUN scripts/create-user.sh
 
-FROM base AS stage0
 # setup aur and install pacman helper
 RUN install -dm755 --owner="${USER}" ${BUILDDIR} && \
     scripts/create-local-aur.sh && \
     scripts/pkg-utils.sh
 
-FROM stage0 AS stage1
 # build and install all xfce packages
 COPY --chown="${USER_ID}" container/scripts/build-packages.sh "${CONTAINER_BASE}/scripts/"
 RUN chmod -R g+ws "${XFCE_WORK_DIR}" && \
     ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages && \
     build-packages
 
-FROM stage1 as stage2
 # setup some useful runtime defaults for the user
 COPY container/etc/X11/ /etc/X11/
 COPY container/etc/xdg/ /etc/xdg/
 RUN scripts/runtime.sh
 
-FROM stage2
 # switch to the test-user
 USER "${USER}"
 WORKDIR "${USER_HOME}"
