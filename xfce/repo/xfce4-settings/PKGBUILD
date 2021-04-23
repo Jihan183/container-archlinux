@@ -48,7 +48,6 @@ build() {
     --localstatedir=/var \
     --sysconfdir=/etc \
     --disable-debug \
-    --disable-upower-glib \
     --disable-static \
     --enable-maintainer-mode \
     --enable-xrandr \

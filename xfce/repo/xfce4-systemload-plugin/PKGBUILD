@@ -10,7 +10,7 @@ license=(GPLv2)
 groups=(xfce-test)
 depends=('upower' 'xfce4-panel')
 makedepends=('git' 'intltool' 'xfce4-dev-tools')
-optdepends=()
+optdepends=('libgtop: for network utilization monitoring')
 provides=("$pkgname")
 conflicts=("$pkgname")
 options=()
@@ -43,7 +43,6 @@ build() {
 		--localstatedir=/var \
 		--sysconfdir=/etc \
 		--disable-debug \
-		--disable-upower-glib \
 		--disable-static \
 		--enable-maintainer-mode \
 		--enable-gtk-doc \
