@@ -39,6 +39,7 @@ build() {
   # The `--with-vala-api='0.52'` is set in accordance with the latest
   # version of vala currently available on arch
   ./autogen.sh \
+    --disable-systemd \
     --prefix=/usr \
     --libexecdir=/usr/lib/xfce4 \
     --localstatedir=/var \

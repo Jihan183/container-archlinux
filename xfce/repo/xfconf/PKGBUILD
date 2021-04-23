@@ -37,7 +37,7 @@ prepare() {
 build() {
   cd "$pkgname"
   ./autogen.sh \
-    \
+    --disable-systemd \
     --prefix=/usr \
     --sysconfdir=/etc \
     --libexecdir=/usr/lib/xfce4 \

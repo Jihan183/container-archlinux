@@ -1,4 +1,4 @@
-FROM archlinux:latest AS base
+FROM archlinux:latest
 LABEL org.opencontainers.image.authors="noblechuk5[at]web[dot]de"
 LABEL org.opencontainers.image.title="xfce-test-archlinux"
 LABEL org.opencontainers.image.description="ArchLinux environment for hacking on xfce-test"

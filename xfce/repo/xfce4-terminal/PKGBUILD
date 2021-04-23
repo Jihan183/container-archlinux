@@ -8,7 +8,7 @@ arch=(any)
 url='https://gitlab.xfce.org/apps/xfce4-terminal'
 license=(GPLv2)
 groups=(xfce-test)
-depends=('hicolor-icon-theme' 'libxfce4ui' 'xfconf' 'vte3>=0.46')
+depends=('hicolor-icon-theme' 'libxfce4ui' 'xfconf' 'vte3>=0.48')
 makedepends=('intltool' 'libxslt' 'xfce4-dev-tools')
 optdepends=(
   'libutempter: Support for utmp/wtmp files'
@@ -47,7 +47,8 @@ build() {
     --disable-debug \
     --disable-static \
     --enable-maintainer-mode \
-    --enable-gtk-doc
+    --enable-gtk-doc \
+    --disable-systemd
   make
 }
 

@@ -32,6 +32,7 @@ fi
 
 # docker/podman args
 docker_podman_arg=(
+    --cap-add=sys_ptrace
     ${LOCAL_XFCE:+--volume "$LOCAL_XFCE:/container/xfce/workdir:ro"}
 )
 
