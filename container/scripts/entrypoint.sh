@@ -16,11 +16,13 @@ function bind_to_workdir() {
         find "${XFCE_WORK_DIR}" -type f -name 'PKGBUILD' \
             -exec printf '\nupdating: {}...' \; \
             -execdir sh -c '
-            dest="${CONTAINER_BASE}/workdir/${PWD##*/}"
+            pkgname="${PWD##*/}"
+            dest="${CONTAINER_BASE}/workdir/$pkgname"
             if [ ! -d $dest ]; then
                 printf "skipped"
             else
                 sed -i "s|\$url\.git|file://${dest}|" "$1"
+                sed -i "s|https://.+\.git|file://${dest}|" "./$pkgname/config"
                 printf "done"
             fi
         ' _ '{}' \;

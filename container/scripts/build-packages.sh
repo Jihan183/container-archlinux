@@ -15,7 +15,7 @@ else
 fi
 
 runuser -- env LC_ALL=C LOGDEST="$LOGDEST" aur build \
-    --ignorearch \
+    --ignore-arch \
     --arg-file "${CONTAINER_BASE}/pkglist.txt" \
     --remove --pkgver --database=custom \
     --margs --syncdeps --noconfirm --clean --log | stdbuf -oL sed --silent -E '
