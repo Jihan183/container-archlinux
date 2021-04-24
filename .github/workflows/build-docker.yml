@@ -26,8 +26,17 @@ jobs:
         uses: redhat-actions/podman-login@v1
         with:
           username: ${{ env.REGISTRY_USER }}
-          p\
-    --network=host \| tee --append $GITHUB_ENV
+          password: ${{ env.REGISTRY_PASSWORD }}
+          registry: ${{ env.IMAGE_REGISTRY }}
+
+      - name: Read and setup build args from environment
+        id: build-args
+        # https://gist.github.com/judy2k/7656bfe3b322d669ef75364a46327836
+        run: |
+          eval "cat <<EOF
+          $(grep -Ev '^#' .env)
+          EOF
+          " | tee --append $GITHUB_ENV
 
           case "${{ github.event_name }}" in
             schedule) echo "::set-output name=tags::devel ${DOWNLOAD_DATE}" ;;
@@ -60,7 +69,8 @@ jobs:
             CPPFLAGS=${{ env.CPPFLAGS }}
           extra-args: |
             --timestamp ${{ env.TIMESTAMP }}
-            --platform linux/amd64
+            --os linux
+            --arch amd64
         timeout-minutes: 50
 
       - name: Copy build logs
