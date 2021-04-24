@@ -35,17 +35,13 @@ fi
 
 # docker/podman args
 docker_podman_arg=(
-    --cap-add=sys_ptrace
-    # --security-opt seccomp=unconfined
-    # --security-opt seccomp="$ROOT_DIR/app/config/seccomp-default.json"
-    # --security-opt=proc-opts='gid=100,hidepid=0'
+    --security-opt seccomp=unconfined
     ${LOCAL_XFCE:+--volume "$LOCAL_XFCE:/container/xfce/workdir:ro"}
 )
 
 # image/container args
 image_cont_args=(
     xfce-test/xfce-test-archlinux:devel
-    # schuellerf/xfce-test:latest
 )
 
 x11docker "${x11docker_args[@]}" \
