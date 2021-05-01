@@ -26,6 +26,7 @@ x11docker_args=(
     --showid
     --showinfofile
     --showpid1
+    --xopt '-dpms' # disables dpms on xserver
     # --keepcache
 )
 
@@ -36,12 +37,13 @@ fi
 # docker/podman args
 docker_podman_arg=(
     --security-opt seccomp=unconfined
+    # --cap-add sys_ptrace # this is useful for debug purposes
     ${LOCAL_XFCE:+--volume "$LOCAL_XFCE:/container/xfce/workdir:ro"}
 )
 
 # image/container args
 image_cont_args=(
-    xfce-test/xfce-test-archlinux:devel
+    "${XFCE_TEST_IMAGE:-xfce-test/xfce-test-archlinux:devel}"
 )
 
 x11docker "${x11docker_args[@]}" \

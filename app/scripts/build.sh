@@ -25,4 +25,4 @@ docker build \
     --build-arg CFLAGS \
     --build-arg CPPFLAGS \
     --network=host \
-    --tag xfce-test/xfce-test-archlinux --file Dockerfile .
+    --tag "${XFCE_TEST_IMAGE:-xfce-test/xfce-test-archlinux:devel}" --file Dockerfile .
