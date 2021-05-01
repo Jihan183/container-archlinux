@@ -3,10 +3,6 @@
 # shellcheck source=app/scripts/vars.sh
 source "$(dirname "$(readlink --canonicalize "${BASH_SOURCE[0]}")")/vars.sh"
 
-if [[ -z "$LOCAL_XFCE" && -d "$HOME/Dev/xfce-workdir" ]]; then
-    LOCAL_XFCE=$HOME/Dev/xfce-workdir
-fi
-
 # x11docker params
 x11docker_args=(
     # --debug
