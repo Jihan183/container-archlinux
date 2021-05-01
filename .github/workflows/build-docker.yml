@@ -3,7 +3,7 @@ name: Build xfce-test container
 on:
   push:
     branches:
-      - main
+      - devel
   schedule:
     - cron: '0 4 * * 0' # https://crontab.guru/#0_4_*_*_0
   release:
@@ -40,7 +40,7 @@ jobs:
 
           case "${{ github.event_name }}" in
             schedule) echo "::set-output name=tags::devel ${DOWNLOAD_DATE}" ;;
-            release) echo "::set-output name=tags::latest ${GITHUB_REF}" ;;
+            release) echo "::set-output name=tags::latest ${GITHUB_REF##*/}" ;;
             push) echo '::set-output name=tags::devel' ;;
           esac
 
