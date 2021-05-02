@@ -41,8 +41,9 @@ jobs:
         id: build-args
         run: |
           ref="${GITHUB_REF##*/}"
+
           case "${{ github.event_name }}" in
-            schedule) echo "::set-output name=tags::${ref} ${DOWNLOAD_DATE}" ;;
+            schedule) echo "::set-output name=tags::${DOWNLOAD_DATE}" ;;
             release) echo "::set-output name=tags::latest ${ref}" ;;
             push) echo "::set-output name=tags::${ref}" ;;
           esac
@@ -56,8 +57,7 @@ jobs:
           image: xfce-test-archlinux
           oci: false
           tags: ${{ steps.build-args.outputs.tags }}
-          dockerfiles: |
-            ./Dockerfile
+          dockerfiles: Dockerfile
           build-args: |
             ACTIONS_CI=${{ env.ACTIONS_CI }}
             TRAVIS_CI=${{ env.TRAVIS_CI }}
