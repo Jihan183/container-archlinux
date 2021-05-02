@@ -21,8 +21,8 @@ function bind_to_workdir() {
             if [ ! -d $dest ]; then
                 printf "skipped"
             else
-                sed -i "s|\$url\.git|file://${dest}|" "$1"
-                sed -i "s|https://.+\.git|file://${dest}|" "./$pkgname/config"
+                sed -Ei "s|\$url\.git|file://${dest}|" "$1"
+                sed -Ei "s|https?://.+\.git|file://${dest}|" "./$pkgname/config"
                 printf "done"
             fi
         ' _ '{}' \;

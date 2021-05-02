@@ -17,7 +17,7 @@ endif
 
 .PHONY: get-container
 get-container: docker-cmd
-	@if ! ${DOCKER} inspect --type image ${XFCE_TEST_IMAGE} --format '{{.ID}}' 2> /dev/null; then \
+	@if ! ${DOCKER} image inspect ${XFCE_TEST_IMAGE} --format '{{.ID}}' 2> /dev/null; then \
 		${DOCKER} pull ${XFCE_TEST_IMAGE}; 														  \
 	fi
 
