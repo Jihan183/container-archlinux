@@ -6,13 +6,13 @@ LOCAL_XFCE ?= ${HOME}/Dev/xfce-workdir
 .PHONY: docker-cmd
 docker-cmd:
 ifndef DOCKER
-	$(error "docker command not found")
+	$(error "docker: command not found")
 endif
 
 .PHONY: git-cmd
 git-cmd:
 ifeq ($(shell which git 2> /dev/null),)
-	$(error "git command not found")
+	$(error "git: command not found")
 endif
 
 .PHONY: get-container
