@@ -72,6 +72,7 @@ jobs:
             CPPFLAGS=${{ env.CPPFLAGS }}
           extra-args: |
             --timestamp ${{ env.TIMESTAMP }}
+            --no-cache
             --os linux
             --arch amd64
         timeout-minutes: 50
