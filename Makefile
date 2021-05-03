@@ -6,18 +6,18 @@ LOCAL_XFCE ?= ${HOME}/Dev/xfce-workdir
 .PHONY: docker-cmd
 docker-cmd:
 ifndef DOCKER
-	$(error "docker command not found")
+	$(error "docker: command not found")
 endif
 
 .PHONY: git-cmd
 git-cmd:
 ifeq ($(shell which git 2> /dev/null),)
-	$(error "git command not found")
+	$(error "git: command not found")
 endif
 
 .PHONY: get-container
 get-container: docker-cmd
-	@if ! ${DOCKER} inspect --type image ${XFCE_TEST_IMAGE} --format '{{.ID}}' 2> /dev/null; then \
+	@if ! ${DOCKER} image inspect ${XFCE_TEST_IMAGE} --format '{{.ID}}' 2> /dev/null; then \
 		${DOCKER} pull ${XFCE_TEST_IMAGE}; 														  \
 	fi
 
