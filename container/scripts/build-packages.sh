@@ -2,9 +2,9 @@
 set -o pipefail
 
 # shellcheck source=container/scripts/common.sh
-source "${CONTAINER_BASE}/scripts/common.sh"
+source "${XFCE_BASE}/scripts/common.sh"
 
-cd "${XFCE_WORK_DIR}"
+cd "${XFCE_GIT_DIR}"
 
 LOGDEST="${LOGDEST:-/tmp/makelogs}"
 
@@ -16,7 +16,7 @@ fi
 
 runuser -- env LC_ALL=C LOGDEST="$LOGDEST" aur build \
     --ignore-arch \
-    --arg-file "${CONTAINER_BASE}/pkglist.txt" \
+    --arg-file "${XFCE_BASE}/pkglist.txt" \
     --remove --pkgver --database=custom \
     --margs --syncdeps --noconfirm --clean --log | stdbuf -oL sed --silent -E '
         /Making package:/{

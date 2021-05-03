@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC2153
 # shellcheck source=container/scripts/common.sh
-source "${CONTAINER_BASE}/scripts/common.sh"
+source "${XFCE_BASE}/scripts/common.sh"
 
 # zsh is too barebones initially, let's fix that
 if [ "${USER_SHELL,,}" = 'zsh' ]; then
@@ -11,7 +11,7 @@ if [ "${USER_SHELL,,}" = 'zsh' ]; then
 fi
 
 # bring the container tools closer to home
-runuser -- ln -s "${CONTAINER_BASE}" "${USER_HOME}/container"
+runuser -- ln -s "${XFCE_BASE}" "${USER_HOME}/container"
 
 # Other useful tools
 # nano: text editor
