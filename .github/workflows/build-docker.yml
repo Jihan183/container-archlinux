@@ -63,7 +63,7 @@ jobs:
             TRAVIS_CI=${{ env.TRAVIS_CI }}
             USER_NAME=${{ env.USER_NAME }}
             USER_SHELL=${{ env.USER_SHELL }}
-            CONTAINER_BASE=${{ env.CONTAINER_BASE }}
+            XFCE_BASE=${{ env.XFCE_BASE }}
             MAIN_BRANCH=${{ env.MAIN_BRANCH }}
             DOWNLOAD_DATE=${{ env.DOWNLOAD_DATE }}
             PACMAN_HELPER=${{ env.PACMAN_HELPER }}

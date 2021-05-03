@@ -7,7 +7,7 @@ LABEL org.opencontainers.image.source = "https://github.com/xfce-test/container-
 ARG TRAVIS_CI
 ARG ACTIONS_CI
 ARG USER_SHELL
-ARG CONTAINER_BASE
+ARG XFCE_BASE
 ARG USER_NAME
 ARG PACMAN_HELPER
 ARG PACMAN_HELPER_URL
@@ -17,7 +17,7 @@ ARG CFLAGS
 ARG CPPFLAGS
 
 # https://github.com/containers/buildah/issues/1503
-ENV CONTAINER_BASE="${CONTAINER_BASE}"
+ENV XFCE_BASE="${XFCE_BASE}"
 ENV USER="${USER_NAME}"
 ENV USER_ID=100
 ENV USER_HOME="/home/${USER}/"
@@ -26,7 +26,7 @@ ENV BUILDDIR=/var/cache/makepkg-build/
 ENV PACMAN_HELPER="${PACMAN_HELPER}"
 ENV PACMAN_HELPER_URL="${PACMAN_HELPER_URL:-https://aur.archlinux.org/${PACMAN_HELPER}.git}"
 ENV PACMAN="${PACMAN_HELPER}"
-ENV XFCE_WORK_DIR="${CONTAINER_BASE}/git/"
+ENV XFCE_GIT_DIR="${XFCE_BASE}/git/"
 ENV DOWNLOAD_DATE="${DOWNLOAD_DATE}"
 ENV MAIN_BRANCH="${MAIN_BRANCH}"
 ENV CFLAGS="${CFLAGS}"
@@ -36,7 +36,7 @@ ENV CPPFLAGS="${CPPFLAGS}"
 RUN id && \
     pacman -Syu base-devel git ${USER_SHELL} --noconfirm --needed
 
-WORKDIR "${CONTAINER_BASE}"
+WORKDIR "${XFCE_BASE}"
 
 # copy in some useful file and setup a test user
 COPY --chown="${USER_ID}" \
@@ -46,11 +46,11 @@ COPY --chown="${USER_ID}" \
     container/scripts/entrypoint.sh \
     container/scripts/pkg-utils.sh \
     container/scripts/runtime.sh \
-    ${CONTAINER_BASE}/scripts/
-COPY --chown="${USER_ID}" xfce/repo "${XFCE_WORK_DIR}"
-COPY --chown="${USER_ID}" container/etc/sudoers.d ${CONTAINER_BASE}/etc/sudoers.d/
-COPY --chown="${USER_ID}" container/etc/pacman.conf.in ${CONTAINER_BASE}/etc/
-COPY --chown="${USER_ID}" container/pkglist.txt ${CONTAINER_BASE}/
+    ${XFCE_BASE}/scripts/
+COPY --chown="${USER_ID}" xfce/repo "${XFCE_GIT_DIR}"
+COPY --chown="${USER_ID}" container/etc/sudoers.d ${XFCE_BASE}/etc/sudoers.d/
+COPY --chown="${USER_ID}" container/etc/pacman.conf.in ${XFCE_BASE}/etc/
+COPY --chown="${USER_ID}" container/pkglist.txt ${XFCE_BASE}/
 RUN scripts/create-user.sh
 
 # setup aur and install pacman helper
@@ -59,9 +59,9 @@ RUN install -dm755 --owner="${USER}" ${BUILDDIR} && \
     scripts/pkg-utils.sh
 
 # build and install all xfce packages
-COPY --chown="${USER_ID}" container/scripts/build-packages.sh "${CONTAINER_BASE}/scripts/"
-RUN chmod -R g+ws "${XFCE_WORK_DIR}" && \
-    ln -s "${CONTAINER_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages && \
+COPY --chown="${USER_ID}" container/scripts/build-packages.sh "${XFCE_BASE}/scripts/"
+RUN chmod -R g+ws "${XFCE_GIT_DIR}" && \
+    ln -s "${XFCE_BASE}/scripts/build-packages.sh" /usr/local/bin/build-packages && \
     build-packages
 
 # setup some useful runtime defaults for the user
@@ -72,7 +72,7 @@ RUN scripts/runtime.sh
 # switch to the test-user
 USER "${USER}"
 WORKDIR "${USER_HOME}"
-ENTRYPOINT [ "/bin/bash", "-c", "${CONTAINER_BASE}/scripts/entrypoint.sh ${@}", "--" ]
+ENTRYPOINT [ "/bin/bash", "-c", "${XFCE_BASE}/scripts/entrypoint.sh ${@}", "--" ]
 
 # install more packages required for the next few steps
 # RUN runuser -u ${USER} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed

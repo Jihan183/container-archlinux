@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=container/scripts/common.sh
-source "${CONTAINER_BASE}/scripts/common.sh"
+source "${XFCE_BASE}/scripts/common.sh"
 
 function dbg() {
     echo "${@}" >&2
@@ -10,14 +10,15 @@ function dbg() {
 function bind_to_workdir() {
     # if the user has mounted their workdir in the container, then
     # make sure we are pulling it from the working copy
-    if [ -d "${CONTAINER_BASE}/workdir" ]; then
+    if [ -d "${XFCE_BASE}/workdir" ]; then
+        export XFCE_WORK_DIR="${XFCE_BASE}/workdir/"
         printf 'Getting things ready for local development...'
         # shellcheck disable=SC2016
-        find "${XFCE_WORK_DIR}" -type f -name 'PKGBUILD' \
+        find "${XFCE_GIT_DIR}" -type f -name 'PKGBUILD' \
             -exec printf '\nupdating: {}...' \; \
             -execdir sh -c '
             pkgname="${PWD##*/}"
-            dest="${CONTAINER_BASE}/workdir/$pkgname"
+            dest="${XFCE_BASE}/workdir/$pkgname"
             if [ ! -d $dest ]; then
                 printf "skipped"
             else

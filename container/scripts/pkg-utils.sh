@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # shellcheck source=container/scripts/common.sh
-source "${CONTAINER_BASE}/scripts/common.sh"
+source "${XFCE_BASE}/scripts/common.sh"
 
 # hack to make sure yay-bin is used if the user picks yay
 PACMAN_HELPER_URL="${PACMAN_HELPER_URL/%yay.git/yay-bin.git}"
