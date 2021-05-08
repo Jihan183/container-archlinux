@@ -40,6 +40,9 @@ fi
 
 # start xfce?
 if [ -n "$DISPLAY" ]; then
+    echo "Turning off X power management"
+    xset -dpms s off
+
     if [[ -t 0 && -t 1 ]]; then
         # --interactive --tty
         dbg 'starting interactive session...'
