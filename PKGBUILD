@@ -8,9 +8,10 @@ arch=(any)
 url='https://github.com/xfce-test/container-archlinux'
 license=(GPLv3)
 groups=(xfce-test)
-depends=(jq docker x11docker fuse-overlayfs catatonit)
+depends=(jq docker x11docker fuse-overlayfs)
 makedepends=()
 optdepends=(
+  'catatonit: podman --init flag support'
   'kittypack: for downloading package dependencies from arch main repos'
   'podman-docker: prefer podman to docker'
 )

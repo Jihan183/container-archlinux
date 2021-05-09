@@ -10,3 +10,4 @@
 - The command to install packages `runuser -- "${PACMAN}"` is used a lot, can we make a function in common.sh that wraps this call?
 - Slim down this fat boy. The image is quite large. Can we shrink it down to 1GB atleast? 600MB or less would be ideal.
 - Make groups for each type of app rather than bundling them all into one group (`xfce-test`)
+- Is there still a need to disable power management and sleep using `xfconf` given the options used to start the container?

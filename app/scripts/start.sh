@@ -13,7 +13,6 @@ x11docker_args=(
     --size=1280x720
     --cap-default
     --network=private
-    --init=dockerinit
     --xephyr
     --user=RETAIN
     --name=xfce-test
@@ -22,7 +21,8 @@ x11docker_args=(
     --showid
     --showinfofile
     --showpid1
-    --xopt '-dpms' # disables dpms on xserver
+     # disables power management and screensaver
+    --xopt '-dpms -s 0'
     # --keepcache
 )
 
@@ -33,7 +33,6 @@ fi
 # docker/podman args
 docker_podman_arg=(
     --security-opt seccomp=unconfined
-    # --cap-add sys_ptrace # this is useful for debug purposes
     ${LOCAL_XFCE:+--volume "$LOCAL_XFCE:/container/xfce/workdir:ro"}
 )
 
