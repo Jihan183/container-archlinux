@@ -5,11 +5,14 @@ set -o pipefail
 source "${XFCE_BASE}/scripts/common.sh"
 
 function build-cmd() {
-    runuser -- env LC_ALL=C ${CI:+LOGDEST="$LOGDEST"} aur build \
-        --ignore-arch --force \
-        ${CI:+--arg-file "${XFCE_BASE}/pkglist.txt"} \
-        --remove --pkgver --database=custom \
-        --margs --syncdeps --noconfirm --clean ${CI:+--log}
+    runuser -- env \
+        LC_ALL=C ${CI:+LOGDEST="$LOGDEST"} \
+        MAIN_BRANCH="${MAIN_BRANCH}" DOWNLOAD_DATE="${DOWNLOAD_DATE}" \
+        aur build \
+            --ignore-arch --force \
+            ${CI:+--arg-file "${XFCE_BASE}/pkglist.txt"} \
+            --remove --pkgver --database=custom \
+            --margs --syncdeps --noconfirm --clean ${CI:+--log}
 }
 
 function build-ci() {
@@ -41,6 +44,11 @@ function build-ci() {
     runuser -- "${PACMAN}" -S man xorg-xrandr xorg-xhost --noconfirm --needed
 
 }
+
+if [[ -n $ACTIONS_CI || -n $TRAVIS_CI ]]; then
+    CI=true
+fi
+
 
 if [ -z "${CI}" ]; then
     build-cmd
