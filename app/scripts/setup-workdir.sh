@@ -7,15 +7,15 @@ mkdir -p "${LOCAL_XFCE}"
 export WORK_DIR="$LOCAL_XFCE"
 
 find "${ROOT_DIR}/xfce/repo" -maxdepth 2 -name 'PKGBUILD' -type f -execdir sh -c '
-    repo_url=`sed -En "s|url=\W*\b(.+)\b\W*$|\1.git|p" $1`
-    pkg=${PWD##*/}
+    repo_url="$(sed -En "s|url=\W*\b(.+)\b\W*$|\1.git|p" $1)"
+    pkg="${PWD##*/}"
     pkg_workdir="$WORK_DIR/$pkg"
 
-    if [ ! -d "$pkg_workdir" ] || ! git -C "$pkg_workdir" rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-        git init --initial-branch="${MAIN_BRANCH}" "$pkg_workdir"
-        git -C "$pkg_workdir" remote add -m "${MAIN_BRANCH}" -f origin "$repo_url"
-        # git -C "$pkg_workdir" symbolic-ref refs/heads/master refs/heads/main
-    else
+    if [ ! -e "$pkg_workdir" ]; then
+        git clone --depth 1 "$repo_url" "$pkg_workdir"
+    elif [ -d "$pkg_workdir" ] && git -C "$pkg_workdir" rev-parse --is-inside-work-tree > /dev/null 2>&1; then
         git -C "$pkg_workdir" fetch origin
+    else
+        echo -e "\e[91m$pkg: is not a directory\e[39m\n"
     fi
 ' _ '{}' \;
