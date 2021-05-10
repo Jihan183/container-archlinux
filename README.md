@@ -1,10 +1,12 @@
 # container-archlinux
 ArchLinux environment for hacking on xfce-test
 
+![screenshot](.github/screenshots/screenshot-xfce.png)
+
 ## Downloading the lastest image
 -
   ```
-  docker pull ghcr.io/xfce-test/xfce-test-archlinux:latest
+  docker pull ghcr.io/xfce-test/xfce-test-archlinux:devel
   ```
 
 ## Ideal usage
@@ -19,4 +21,4 @@ To achieve this goal, when starting the container
 * When you want to test, open the container and type `build-packages`, and the changes you made will
 be detected and built.
   * (Not recommended, but might help) if the build takes too long, open `/container/xfce/pkglist.txt` and remove all the lines in there except for the name of the package to be built
-* You can reinstall the project using this exact command: `yay -S xfce-test --needed`. It will detect any updated packages and prompt you for re-installation
+* You can reinstall xfce using this exact command: `yay -S xfce-test --needed`. It will detect any updated packages and prompt you for re-installation
