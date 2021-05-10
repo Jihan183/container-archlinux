@@ -64,7 +64,7 @@ RUN chmod -R g+ws "${XFCE_GIT_DIR}" && \
 
 # setup some useful runtime defaults for the user
 COPY container/etc/X11/ /etc/X11/
-COPY container/etc/xdg/ /etc/xdg/
+COPY --chown="${USER_ID}" container/home/user/ "${USER_HOME}"
 RUN scripts/runtime.sh
 
 # switch to the test-user
