@@ -22,7 +22,7 @@ x11docker_args=(
     --showinfofile
     --showpid1
      # disables power management and screensaver
-    --xopt '-dpms -s 0'
+    --xopt '-dpms'
     # --keepcache
 )
 

@@ -8,6 +8,7 @@ function build-cmd() {
     runuser -- env \
         LC_ALL=C ${CI:+LOGDEST="$LOGDEST"} \
         MAIN_BRANCH="${MAIN_BRANCH}" DOWNLOAD_DATE="${DOWNLOAD_DATE}" \
+        PACMAN="${PACMAN}" BUILDDIR="${BUILDDIR}" \
         aur build \
             --ignore-arch --force \
             ${CI:+--arg-file "${XFCE_BASE}/pkglist.txt"} \
@@ -48,7 +49,6 @@ function build-ci() {
 if [[ -n $ACTIONS_CI || -n $TRAVIS_CI ]]; then
     CI=true
 fi
-
 
 if [ -z "${CI}" ]; then
     build-cmd

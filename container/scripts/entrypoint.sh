@@ -40,8 +40,8 @@ fi
 
 # start xfce?
 if [ -n "$DISPLAY" ]; then
-    echo "Turning off X power management"
-    xset -dpms s off
+    echo "Turning off screensaver"
+    xset s off
 
     if [[ -t 0 && -t 1 ]]; then
         # --interactive --tty

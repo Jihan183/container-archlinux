@@ -19,5 +19,9 @@ runuser -- ln -s "${XFCE_BASE}" "${USER_HOME}/container"
 # dconf-editor: enabling gtk inspector keyboard shortcut
 runuser -- "${PACMAN}" -S nano man dconf-editor --needed --noconfirm
 
+# gtk inspector
+gsettings set org.gtk.Settings.Debug enable-inspector-keybinding true
+gsettings set org.gtk.Settings.Debug inspector-warning false
+
 # setup machine-id (Not sure this is still required)
 touch /etc/machine-id
