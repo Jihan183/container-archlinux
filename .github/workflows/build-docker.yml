@@ -75,7 +75,6 @@ jobs:
             --no-cache
             --os linux
             --arch amd64
-        timeout-minutes: 50
 
       - name: Copy build logs
         id: extract-logs

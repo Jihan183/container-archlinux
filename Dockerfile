@@ -70,7 +70,7 @@ RUN scripts/runtime.sh
 # switch to the test-user
 USER "${USER}"
 WORKDIR "${USER_HOME}"
-ENTRYPOINT [ "/bin/bash", "-c", "${XFCE_BASE}/scripts/entrypoint.sh ${@}", "--" ]
+ENTRYPOINT [ "/bin/bash", "-c", "exec ${XFCE_BASE}/scripts/entrypoint.sh \"${@}\"", "--" ]
 
 # install more packages required for the next few steps
 # RUN runuser -u ${USER} -- ${PACMAN} -S python-behave gsettings-desktop-schemas --noconfirm --needed
