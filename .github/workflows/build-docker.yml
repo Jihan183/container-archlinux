@@ -43,9 +43,8 @@ jobs:
           ref="${GITHUB_REF##*/}"
 
           case "${{ github.event_name }}" in
-            schedule) echo "::set-output name=tags::${DOWNLOAD_DATE}" ;;
-            release) echo "::set-output name=tags::latest ${ref}" ;;
-            push) echo "::set-output name=tags::${ref}" ;;
+            schedule) echo "::set-output name=tags::latest ${DOWNLOAD_DATE}" ;;
+            release|push) echo "::set-output name=tags::latest ${ref}" ;;
           esac
 
           echo "TIMESTAMP=$(date --date="${DOWNLOAD_DATE}" '+%s')" | tee --append $GITHUB_ENV
